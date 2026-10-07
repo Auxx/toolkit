@@ -97,6 +97,11 @@ describe('Path Helper', () => {
         expect(componentPath(tree, projectName, featureName, componentName, type)).toBe(expectedPath);
       }
     );
+
+    it('should normalise path names', () => {
+      expect(componentPath(tree, appName, 'featureName', 'componentName', 'component'))
+        .toBe('apps/my-app/src/feature-name/components/component-name');
+    });
   });
 
   describe('featureRoutesPath', () => {
