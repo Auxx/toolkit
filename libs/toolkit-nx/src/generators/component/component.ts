@@ -1,9 +1,5 @@
-import { generateFiles, joinPathFragments, names, readProjectConfiguration, Tree } from '@nx/devkit';
-import {
-  defaultComponentPrefix,
-  getComponentClassSuffix,
-  getComponentSuffix
-} from '../../lib/component-types/component-types';
+import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit';
+import { createSelector, getComponentClassSuffix, getComponentSuffix } from '../../lib/component-types/component-types';
 import { componentPath, featurePath } from '../../lib/path-helper/path-helper';
 import { ComponentGeneratorSchema } from './component-schema';
 
@@ -35,7 +31,7 @@ export async function componentGenerator(tree: Tree, options: ComponentGenerator
   const entityName = artifact.className;
   const className = `${artifact.className}${getComponentClassSuffix(options.type)}`;
   const fileName = `${artifact.fileName}.${getComponentSuffix(options.type)}`;
-  const selector = createSelector(tree, options, options.name);
+  const selector = createSelector(tree, options.project, options.name);
 
   generateFiles(
     tree,
@@ -55,14 +51,6 @@ export async function componentGenerator(tree: Tree, options: ComponentGenerator
   lastRun.className = className;
   lastRun.fileName = fileName;
   lastRun.selector = selector;
-}
-
-function createSelector(tree: Tree, options: ComponentGeneratorSchema, name: string): string {
-  const project = readProjectConfiguration(tree, options.project);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const prefix = (project as any).prefix ?? defaultComponentPrefix;
-
-  return names(`${prefix}-${name}`).fileName;
 }
 
 export function getLastRun(): LastRun {

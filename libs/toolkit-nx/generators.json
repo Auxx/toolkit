@@ -24,6 +24,16 @@
       "factory": "./src/generators/skills/skills",
       "schema": "./src/generators/skills/skills-schema.json",
       "description": "Generates skills for current workspace"
+    },
+    "pipe": {
+      "factory": "./src/generators/pipe/pipe",
+      "schema": "./src/generators/pipe/pipe-schema.json",
+      "description": "Generates a pipe inside a feature of an Angular project"
+    },
+    "directive": {
+      "factory": "./src/generators/directive/directive",
+      "schema": "./src/generators/directive/directive-schema.json",
+      "description": "Generates a directive inside a feature of an Angular project"
     }
   }
 }

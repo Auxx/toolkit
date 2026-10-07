@@ -1,0 +1,14 @@
+import { TestBed } from '@angular/core/testing';
+
+import { <%= className %> } from './<%= fileName %>';
+
+describe('<%= className %>', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+  });
+
+  it('should be created', () => {
+    const directive = new <%= className %>();
+    expect(directive).toBeTruthy();
+  });
+});

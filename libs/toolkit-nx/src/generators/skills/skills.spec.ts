@@ -2,14 +2,10 @@ import { addProjectConfiguration, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import skillsGenerator from './skills';
 
-describe('Component Generator', () => {
+describe('Skills Generator', () => {
   let tree: Tree;
 
   const appName = 'front-end';
-
-  const featureName = 'user';
-
-  const componentName = 'user-list';
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();
@@ -25,13 +21,8 @@ describe('Component Generator', () => {
     );
   });
 
-  it('create skills', async () => {
-    await skillsGenerator(tree, {
-      name: componentName,
-      project: appName,
-      feature: featureName,
-      type: 'component'
-    });
+  it('should create skills', async () => {
+    await skillsGenerator(tree, { unused: undefined });
 
     const targetPath = `.agents/skills`;
 
