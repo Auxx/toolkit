@@ -38,7 +38,9 @@ describe('Feature Generator', () => {
     const routes = `apps/${appName}/src/${featureName}/${featureName}.routes.ts`;
     tree.write(routes, '');
 
-    await featureGenerator(tree, { name: featureName, project: appName });
+    await expect(() => featureGenerator(tree, { name: featureName, project: appName }))
+      .rejects
+      .toThrow(`Feature "new-feature" already exists.`);
 
     expect(tree.read(routes)?.toString()).toBe('');
   });

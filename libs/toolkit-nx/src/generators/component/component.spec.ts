@@ -87,16 +87,16 @@ describe('Component Generator', () => {
     expect(ts).not.toContain('TranslocoDirective');
   });
 
-  it('should fail is feature does not exist', async () => {
-    await componentGenerator(tree, {
-      name: componentName,
-      project: appName,
-      feature: featureName,
-      type: 'component'
-    });
-
-    const targetPath = `apps/${appName}/src/${featureName}/components/${componentName}`;
-
-    expect(tree.children(targetPath).length).toBe(0);
+  it('should fail if feature does not exist', async () => {
+    await expect(() =>
+      componentGenerator(tree, {
+        name: componentName,
+        project: appName,
+        feature: featureName,
+        type: 'component'
+      })
+    )
+      .rejects
+      .toThrow();
   });
 });
