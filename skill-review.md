@@ -32,7 +32,7 @@ will often either not load it or produce broken output:
 
 ## Critical issues
 
-### C1. "Convert to camel case" produces broken output
+### ✅ C1. "Convert to camel case" produces broken output
 
 All six references tell the agent to convert project, feature and artifact names
 to camel case. The generators treat the raw `--name` / `--feature` as a **folder
@@ -110,7 +110,7 @@ succeeded.
 
 ## Important gaps
 
-### I1. "A user must specify…" leads to needless questions
+### ✅ I1. "A user must specify…" leads to needless questions
 
 Step 1 of every reference says the _user_ must supply project, feature and name.
 In a workspace with one app (`test`), or where the feature is obvious from
@@ -122,7 +122,7 @@ with a resolution order:
    pick from the request and context.
 3. Ask the user only if a value is still ambiguous.
 
-### I2. Missing knowledge about what the generators actually do
+### ✅ I2. Missing knowledge about what the generators actually do
 
 Add a short "what you get" section so the agent doesn't redo or undo generator
 work:
@@ -143,7 +143,7 @@ work:
   `{ path: 'orders', loadChildren: () => import('../orders/orders.routes').then(m => m.routes) }`.
   The skill should say so explicitly. Otherwise new pages are unreachable.
 
-### I3. Undocumented options: dialogs and translations
+### ✅ I3. Undocumented options: dialogs and translations
 
 - `component` accepts `--type=component|page|dialog`. **Dialogs have no
   reference and no mention**, so an agent asked for a dialog will make a plain
@@ -157,7 +157,7 @@ work:
 Add a `--type=dialog` row to the component reference (or a separate
 `create-dialog.md`) and document `--translations`.
 
-### I4. Instructions to avoid plain Angular/Nx generators are too weak
+### ✅ I4. Instructions to avoid plain Angular/Nx generators are too weak
 
 "These code generators SHOULD be used" is the only directive. Make it explicit
 that the agent must **not** use `@nx/angular:*` / `ng g` generators or

@@ -1,7 +1,8 @@
 # create-page
 
 Create a new Angular page. Angular page is a type of Angular component designed
-to display a single view or page in an application.
+to display a single view or page in an application. This generator automatically
+registers a new route for the page - there is no need to add it manually.
 
 ## Key Principles
 

@@ -1,6 +1,8 @@
 # create-feature
 
-Create a new feature inside an Angular application project.
+Create a new feature inside an Angular application project. This generator
+creates an empty routes file, but features are not wired automatically; the user
+should add it manually.
 
 ## Key Principles
 

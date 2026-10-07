@@ -15,6 +15,8 @@ components, features, pages, dialogs, pipes, directives, and services. They
 ensure consistency across the codebase and reduce boilerplate work. These code
 generators SHOULD be used every time a new Angular artefact needs to be created.
 
+Do NOT use `nx g @nx/angular:*`, `ng generate`, or hand-writing the files.
+
 # Using @hexmode/toolkit-nx generators
 
 ## 1. Run the correct generator first
@@ -29,6 +31,22 @@ generators SHOULD be used every time a new Angular artefact needs to be created.
   [create-directive.md](references/create-directive.md)
 - To create a new service, read
   [create-service.md](references/create-service.md)
+
+### Layout of generated code
+
+- Application projects live inside `apps/`, library projects live inside
+  `libs/`. `<projectRoot>` refers to the root directory of the project, for
+  example, a `<projectRoot>` for `backoffice` is application `apps/backoffice`.
+- Features live inside `<projectRoot>/src/`. For example, feature `users` will
+  be inside `<projectRoot>/src/users`.
+- Angular artefacts live inside features grouped by their type:
+  `<projectRoot>/src/<feature>/{components,pages,dialogs,services,pipes,directives}/<name>`.
+  This path is referred as `<artefactRoot>`.
+- Generated files like `.ts`, `.scss`, `.html`, `.spec.ts`, etc live inside
+  `<artefactRoot>`.
+- Components, pages, and dialogs are composed of `.ts`, `.html`, `.scss`,
+  `.spec.ts` and `.stories.ts` files.
+- Services, pipes, and directives are composed of `.ts` and `.spec.ts` files.
 
 ## 2. Modify Generated Code (If Needed)
 
