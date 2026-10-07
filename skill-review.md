@@ -53,7 +53,7 @@ line up. For `--project`, use the exact name from `nx show projects`. Ideally
 also normalise in the generators with `names(x).fileName` in `path-helper.ts`
 and `page.ts`, so the skill isn't the only safeguard.
 
-### C2. The description doesn't cover "every time the agent creates something"
+### ✅ C2. The description doesn't cover "every time the agent creates something"
 
 ```yaml
 description: |
@@ -90,7 +90,7 @@ description: >
   `nx g @nx/angular:*`, `ng generate`, or hand-writing the files.
 ```
 
-### C3. Generators fail silently
+### ✅ C3. Generators fail silently
 
 If the feature doesn't exist, `component`, `page`, `service`, `pipe` and
 `directive` print `Feature "x" does not exist.`, write nothing, and **exit 0**.
