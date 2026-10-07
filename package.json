@@ -7,7 +7,8 @@
     "format": "dprint fmt",
     "format:check": "dprint check",
     "lint": "nx run-many --all --target=lint",
-    "test": "nx run-many --all --target=test -- --coverage.enabled=true"
+    "test": "nx run-many --all --target=test -- --coverage.enabled=true",
+    "prepare": "husky"
   },
   "dependencies": {},
   "devDependencies": {
@@ -30,6 +31,7 @@
     "@vitest/coverage-v8": "4.1.11",
     "dprint": "0.60.1",
     "eslint": "10.12.0",
+    "husky": "9.1.7",
     "jsonc-eslint-parser": "3.3.0",
     "nx": "23.2.1",
     "ts-morph": "28.0.0",
