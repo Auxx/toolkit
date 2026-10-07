@@ -27,5 +27,25 @@
     "@nx/angular:component": {
       "style": "scss"
     }
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      },
+      "include": [
+        "libs/toolkit-nx/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "targetName": "test"
+      },
+      "include": [
+        "libs/toolkit-nx/**/*"
+      ]
+    }
+  ]
 }

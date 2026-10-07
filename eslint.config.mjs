@@ -1,9 +1,15 @@
 import nx from "@nx/eslint-plugin";
+import stylistic from "@stylistic/eslint-plugin"
 
 export default [
     ...nx.configs["flat/base"],
     ...nx.configs["flat/typescript"],
     ...nx.configs["flat/javascript"],
+    {
+      plugins: {
+        '@stylistic': stylistic
+      },
+    },
     {
       "ignores": [
         "**/dist",
@@ -50,6 +56,19 @@ export default [
             "**/*.mjs"
         ],
         // Override or add rules here
-        rules: {}
+      rules: {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": ["error"],
+        "@typescript-eslint/no-non-null-assertion": ["error"],
+        "arrow-body-style": ["error", "as-needed"],
+        "@stylistic/arrow-parens": ["error", "as-needed"]
+      }
     }
 ];
