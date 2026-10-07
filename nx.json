@@ -19,12 +19,10 @@
     "@nx/angular:application": {
       "e2eTestRunner": "none",
       "linter": "eslint",
-      "style": "scss",
-      "unitTestRunner": "jest"
+      "style": "scss"
     },
     "@nx/angular:library": {
-      "linter": "eslint",
-      "unitTestRunner": "jest"
+      "linter": "eslint"
     },
     "@nx/angular:component": {
       "style": "scss"
