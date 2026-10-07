@@ -1,7 +1,7 @@
 import { generateFiles, joinPathFragments, Tree } from '@nx/devkit';
 import { SkillsGeneratorSchema } from './skills-schema';
 
-const knownSkills = [ 'toolkit-nx' ];
+const knownSkills = [ 'toolkit-nx', 'workspace' ];
 
 export async function skillsGenerator(tree: Tree, _options: SkillsGeneratorSchema) {
   const source = joinPathFragments(__dirname, 'files');

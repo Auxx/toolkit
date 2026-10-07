@@ -7,7 +7,7 @@ description: |
   new .ts/.html/.scss Angular file, whether the user asked for it directly
   ("add a component", "create a service") or it is a step in a larger task
   ("build a settings screen", "add an orders feature"). Use instead of
-  `nx g @nx/angular:*`, `ng generate`, or hand-writing the files.
+  `nx g @nx/angular:*`, and `ng generate`, or hand-writing the files.
 ---
 
 `@hexmode/toolkit-nx` contains a set of code generators, which help scaffold new
@@ -15,7 +15,7 @@ components, features, pages, dialogs, pipes, directives, and services. They
 ensure consistency across the codebase and reduce boilerplate work. These code
 generators SHOULD be used every time a new Angular artefact needs to be created.
 
-Do NOT use `nx g @nx/angular:*`, `ng generate`, or hand-writing the files.
+Do NOT use `nx g @nx/angular:*`, `ng generate`.
 
 # Using @hexmode/toolkit-nx generators
 
