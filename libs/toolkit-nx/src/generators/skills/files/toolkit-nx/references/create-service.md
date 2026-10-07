@@ -6,19 +6,20 @@ Create a new Angular service.
 
 - **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular service generator is invoked using `nx g @hexmode/toolkit-nx:service`
-  followed by required arguments
+  followed by required arguments.
+- All services should be part of features inside the project, and a feature must
+  exist before running the generator. If the required feature does not exist,
+  run the feature generator first.
 
 ## Steps
 
-### 1. Verify user input
+### 1. Generator arguments
 
-A user must specify the following:
-
-- Project name: must be a non-empty string (convert to camel case and pass to
+- Project name: must be a non-empty string (convert to a kebab-case and pass to
   generator as `--project` argument)
-- Feature name: must be a non-empty string (convert to camel case and pass to
+- Feature name: must be a non-empty string (convert to a kebab-case and pass to
   generator as `--feature` argument)
-- New service name: must be a non-empty string (convert to camel case and pass
+- New service name: must be a non-empty string (convert to a kebab-case and pass
   to generator as `--name` argument)
 
 ### 2. Dry-Run to Verify File Placement
@@ -40,33 +41,3 @@ Execute the generator:
 ```shell
 nx g @hexmode/toolkit-nx:service --project=<project-name> --feature=<feature-name> --name=<service-name> --no-interactive
 ```
-
-### 4. Modify Generated Code (If Needed)
-
-Service generator provides a starting point. Modify the output as needed to:
-
-- Add or modify functionality as requested
-- Adjust imports, exports, or configurations
-- Integrate with existing code patterns
-
-### 5. Format and Verify
-
-Format all generated/modified files:
-
-```shell
-npm run format
-```
-
-Then verify the generated code works. Keep in mind that the changes you make
-with a generator or subsequent modifications might impact various projects, so
-it's usually not enough to only run targets for the artefact you just created.
-
-```shell
-npm run lint
-npm run test
-```
-
-If verification fails with manageable issues (a few lint errors, minor type
-issues), fix them. If issues are extensive, attempt obvious fixes first, then
-escalate to the user with details about what was generated, what's failing, and
-what you've attempted.
