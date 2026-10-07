@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "Skills",
+  "title": "Skills",
+  "type": "object",
+  "properties": {
+  },
+  "required": []
+}

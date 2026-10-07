@@ -19,6 +19,11 @@
       "factory": "./src/generators/service/service",
       "schema": "./src/generators/service/service-schema.json",
       "description": "Generates a service inside a feature of an Angular project"
+    },
+    "skills": {
+      "factory": "./src/generators/skills/skills",
+      "schema": "./src/generators/skills/skills-schema.json",
+      "description": "Generates skills for current workspace"
     }
   }
 }
