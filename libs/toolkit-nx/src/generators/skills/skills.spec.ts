@@ -24,10 +24,15 @@ describe('Skills Generator', () => {
   it('should create skills', async () => {
     await skillsGenerator(tree, { unused: undefined });
 
-    const targetPath = `.agents/skills`;
+    const agentsTarget = '/.agents/skills';
+    const claudeTarget = '/.claude/skills';
 
-    expect(tree.children(targetPath).length).toBe(1);
-    expect(tree.exists(`${targetPath}/toolkit-nx/SKILL.md`)).toBe(true);
-    expect(tree.children(`${targetPath}/toolkit-nx/references`).length).toBe(6);
+    expect(tree.children(agentsTarget).length).toBe(1);
+    expect(tree.exists(`${agentsTarget}/toolkit-nx/SKILL.md`)).toBe(true);
+    expect(tree.children(`${agentsTarget}/toolkit-nx/references`).length).toBe(6);
+
+    expect(tree.children(claudeTarget).length).toBe(1);
+    expect(tree.exists(`${claudeTarget}/toolkit-nx/SKILL.md`)).toBe(true);
+    expect(tree.children(`${claudeTarget}/toolkit-nx/references`).length).toBe(6);
   });
 });

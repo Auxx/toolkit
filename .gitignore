@@ -48,3 +48,6 @@ vitest.config.*.timestamp*
 .angular
 
 __screenshots__/
+
+.agents/skills
+.claude/skills
