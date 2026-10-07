@@ -1,6 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "master",
   "analytics": false,
+  "tui": {
+    "enabled": false
+  },
   "namedInputs": {
     "default": [
       "{projectRoot}/**/*",
@@ -10,5 +14,58 @@
       "default"
     ],
     "sharedGlobals": []
+  },
+  "generators": {
+    "@nx/angular:application": {
+      "e2eTestRunner": "none",
+      "linter": "eslint",
+      "style": "scss",
+      "unitTestRunner": "vitest-angular"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      },
+      "include": [
+        "libs/toolkit-nx/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "targetName": "test"
+      },
+      "include": [
+        "libs/toolkit-nx/**/*"
+      ]
+    }
+  ],
+  "targetDefaults": {
+    "@angular/build:application": {
+      "cache": true,
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
+    },
+    "@angular/build:unit-test": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production"
+      ]
+    }
   }
 }

@@ -1,0 +1,22 @@
+import { Meta, StoryObj } from '@storybook/angular';
+import { <%= className %> } from './<%= fileName %>';
+
+const meta: Meta<<%= className %>> = {
+  title: 'Components/<%= entityName %>',
+  component: <%= className %>,
+
+  args: {},
+
+  argTypes: {}
+};
+
+export default meta;
+
+type Story = StoryObj<<%= className %>>;
+
+export const Primary: Story = {
+  render: props => ({
+    props,
+    template: `<<%= selector %>></<%= selector %>>`
+  })
+};

@@ -1,0 +1,74 @@
+import nx from "@nx/eslint-plugin";
+import stylistic from "@stylistic/eslint-plugin"
+
+export default [
+    ...nx.configs["flat/base"],
+    ...nx.configs["flat/typescript"],
+    ...nx.configs["flat/javascript"],
+    {
+      plugins: {
+        '@stylistic': stylistic
+      },
+    },
+    {
+      "ignores": [
+        "**/dist",
+        "**/out-tsc",
+        "**/vitest.config.*.timestamp*"
+      ]
+    },
+    {
+        files: [
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.js",
+            "**/*.jsx"
+        ],
+        rules: {
+            "@nx/enforce-module-boundaries": [
+                "error",
+                {
+                    enforceBuildableLibDependency: true,
+                    allow: [
+                        "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$"
+                    ],
+                    depConstraints: [
+                        {
+                            sourceTag: "*",
+                            onlyDependOnLibsWithTags: [
+                                "*"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        files: [
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.cts",
+            "**/*.mts",
+            "**/*.js",
+            "**/*.jsx",
+            "**/*.cjs",
+            "**/*.mjs"
+        ],
+        // Override or add rules here
+      rules: {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": ["error"],
+        "@typescript-eslint/no-non-null-assertion": ["error"],
+        "arrow-body-style": ["error", "as-needed"],
+        "@stylistic/arrow-parens": ["error", "as-needed"]
+      }
+    }
+];
