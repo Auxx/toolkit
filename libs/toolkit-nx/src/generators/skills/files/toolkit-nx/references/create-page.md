@@ -4,10 +4,9 @@ Create a new Angular page.
 
 ## Key Principles
 
-- **Always use `--no-interactive`** - Prevents prompts that would hang
-   execution
+- **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular page generator is invoked using `nx g @hexmode/toolkit-nx:page`
-   followed by required arguments
+  followed by required arguments
 
 ## Steps
 

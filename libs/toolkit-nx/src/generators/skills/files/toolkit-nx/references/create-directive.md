@@ -4,10 +4,9 @@ Create a new Angular directive.
 
 ## Key Principles
 
-- **Always use `--no-interactive`** - Prevents prompts that would hang
-   execution
+- **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular directive generator is invoked using
-   `nx g @hexmode/toolkit-nx:directive` followed by required arguments
+  `nx g @hexmode/toolkit-nx:directive` followed by required arguments
 
 ## Steps
 

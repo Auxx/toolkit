@@ -4,10 +4,9 @@ Create a new Angular component.
 
 ## Key Principles
 
-- **Always use `--no-interactive`** - Prevents prompts that would hang
-   execution
+- **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular component generator is invoked using
-   `nx g @hexmode/toolkit-nx:component` followed by required arguments
+  `nx g @hexmode/toolkit-nx:component` followed by required arguments
 
 ## Steps
 

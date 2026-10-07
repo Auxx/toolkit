@@ -4,10 +4,9 @@ Create a new Angular pipe.
 
 ## Key Principles
 
-- **Always use `--no-interactive`** - Prevents prompts that would hang
-   execution
+- **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular pipe generator is invoked using `nx g @hexmode/toolkit-nx:pipe`
-   followed by required arguments
+  followed by required arguments
 
 ## Steps
 

@@ -4,10 +4,9 @@ Create a new feature inside an Angular application project.
 
 ## Key Principles
 
-- **Always use `--no-interactive`** - Prevents prompts that would hang
-   execution
-- Feature generator is invoked using `nx g @hexmode/toolkit-nx:feature`
-   followed by required arguments
+- **Always use `--no-interactive`** - Prevents prompts that would hang execution
+- Feature generator is invoked using `nx g @hexmode/toolkit-nx:feature` followed
+  by required arguments
 
 ## Steps
 

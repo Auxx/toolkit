@@ -4,10 +4,9 @@ Create a new Angular service.
 
 ## Key Principles
 
-- **Always use `--no-interactive`** - Prevents prompts that would hang
-   execution
+- **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular service generator is invoked using `nx g @hexmode/toolkit-nx:service`
-   followed by required arguments
+  followed by required arguments
 
 ## Steps
 

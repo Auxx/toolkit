@@ -1,6 +1,6 @@
 import { addProjectConfiguration, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
-import skillsGenerator from "./skills";
+import skillsGenerator from './skills';
 
 describe('Component Generator', () => {
   let tree: Tree;
