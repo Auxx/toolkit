@@ -50,7 +50,8 @@
     "newLineKind": "auto",
     "textWrap": "always",
     "codeBlock.skipFormat": true,
-    "codeBlock.preserveIndentation": true
+    "codeBlock.preserveIndentation": true,
+    "wrapCodeSpans": false
   },
   "includes": [
     "**/*.{ts,tsx,js,jsx,json,md}"
