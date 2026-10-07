@@ -45,6 +45,48 @@ describe('Component Generator', () => {
     expect(tree.exists(`${targetPath}/${componentName}.component.ts`)).toBe(true);
   });
 
+  it('should generate a component with translations support', async () => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+
+    await componentGenerator(tree, {
+      name: componentName,
+      project: appName,
+      feature: featureName,
+      type: 'component',
+      translations: true
+    });
+
+    const targetPath = `apps/${appName}/src/${featureName}/components/${componentName}`;
+
+    const html = tree.read(`${targetPath}/${componentName}.component.html`, 'utf-8')?.toString();
+    expect(html).toContain('<ng-container *transloco="let t; prefix: \'frontEnd.UserListComponent\'">');
+    expect(html).toContain('</ng-container>');
+
+    const ts = tree.read(`${targetPath}/${componentName}.component.ts`, 'utf-8')?.toString();
+    expect(ts).toContain('import { TranslocoDirective } from \'@jsverse/transloco\';');
+    expect(ts).toContain('imports: [ TranslocoDirective ]');
+  });
+
+  it('should generate a component without translations support', async () => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+
+    await componentGenerator(tree, {
+      name: componentName,
+      project: appName,
+      feature: featureName,
+      type: 'component',
+      translations: false
+    });
+
+    const targetPath = `apps/${appName}/src/${featureName}/components/${componentName}`;
+
+    const html = tree.read(`${targetPath}/${componentName}.component.html`, 'utf-8')?.toString();
+    expect(html).not.toContain('*transloco');
+
+    const ts = tree.read(`${targetPath}/${componentName}.component.ts`, 'utf-8')?.toString();
+    expect(ts).not.toContain('TranslocoDirective');
+  });
+
   it('should fail is feature does not exist', async () => {
     await componentGenerator(tree, {
       name: componentName,

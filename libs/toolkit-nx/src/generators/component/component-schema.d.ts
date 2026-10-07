@@ -5,4 +5,6 @@ export interface ComponentGeneratorSchema {
   project: string;
   feature: string;
   type: ComponentType;
+
+  translations?: boolean;
 }

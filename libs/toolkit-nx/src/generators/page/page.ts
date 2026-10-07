@@ -7,7 +7,7 @@ import componentGenerator, { getLastRun } from '../component/component';
 import { PageGeneratorSchema } from './page-schema';
 
 export async function pageGenerator(tree: Tree, options: PageGeneratorSchema) {
-  await componentGenerator(tree, { ...options, type: 'page' });
+  await componentGenerator(tree, { ...options, type: 'page', translations: true });
 
   const lastRun = getLastRun();
 

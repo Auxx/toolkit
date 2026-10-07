@@ -45,7 +45,9 @@ export async function componentGenerator(tree: Tree, options: ComponentGenerator
       entityName,
       className,
       fileName,
-      selector
+      selector,
+      translations: options.translations,
+      projectName: names(options.project).propertyName
     }
   );
 

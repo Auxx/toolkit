@@ -1,1 +1,7 @@
+<% if (translations) { -%>
+<ng-container *transloco="let t; prefix: '<%= projectName %>.<%= className %>'">
+<% } -%>
 <p><%= selector %> works!</p>
+<% if (translations) { -%>
+</ng-container>
+<% } -%>

@@ -31,6 +31,11 @@
       "description": "Type of the component to generate",
       "default": "component",
       "x-prompt": "What type of component would you like to generate?"
+    },
+    "translations": {
+      "type": "boolean",
+      "description": "Add translation support",
+      "default": false
     }
   },
   "required": ["name", "project", "feature", "type"]

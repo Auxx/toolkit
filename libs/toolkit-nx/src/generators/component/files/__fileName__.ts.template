@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+<% if (translations) { -%>
+import { TranslocoDirective } from '@jsverse/transloco';
+<% } -%>
 
 @Component({
   selector: '<%= selector %>',
-  imports: [],
+  imports: [<% if (translations) { %> TranslocoDirective <% } %>],
   templateUrl: './<%= fileName %>.html',
   styleUrl: './<%= fileName %>.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
