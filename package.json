@@ -7,7 +7,7 @@
     "format": "dprint fmt",
     "format:check": "dprint check",
     "lint": "nx run-many --all --target=lint",
-    "test": "nx run-many --all --target=test"
+    "test": "nx run-many --all --target=test -- --coverage.enabled=true"
   },
   "dependencies": {},
   "devDependencies": {
