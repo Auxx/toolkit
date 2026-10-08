@@ -1,1 +1,1 @@
-export * from './lib/toolkit-rx/toolkit-rx';
+export * from './subjects';
