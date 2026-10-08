@@ -13,6 +13,22 @@ application and library projects, each with its own set of files and
 dependencies. Use this skill to navigate and explore the workspace and
 understand how the projects are organised and interconnected.
 
+## Exploration workflow
+
+1. `npx nx show projects --type app` / `--type lib` to find candidate projects.
+   Ignore the root project which matches the package name specified in
+   `package.json`.
+2. `npx nx show project <project>` to get `root`, `sourceRoot` and the target
+   executors (this also tells you whether the project is Angular).
+3. List `<sourceRoot>` to see which features exist. Reuse an existing feature
+   before creating a new one.
+4. Read one or two existing artefacts of the same type in that feature (and
+   `<feature>.routes.ts`, and `app.routes.ts` for how features are wired in).
+   Match their conventions.
+5. Check dependencies with `npx nx graph --print` (and `tsconfig.base.json`
+   paths for library import aliases) before importing across projects.
+6. To create artefacts, hand over to the `toolkit-nx` skill.
+
 ## List all projects
 
 Use `npx nx show projects` command to list all projects in the workspace. It
@@ -91,9 +107,11 @@ performed on the project, such as linting, testing, building, or publishing.
 There are four targets in the example output: `lint`, `test`,
 `nx-release-publish`, and `build`.
 
-`implicitDependencies` element indicates the list of projects that the specific
-project depends on. This is NOT a list of third-party dependencies. Third-party
-dependencies are specified in `package.json`.
+`implicitDependencies` lists only dependencies declared manually in the project
+configuration. It is usually empty. Do not use it to find what a project depends
+on; use `npx nx graph --print` instead (see below). This is NOT a list of
+third-party dependencies. Third-party dependencies are specified in
+`package.json`.
 
 Different projects will have different properties listed based on their type,
 configuration, and technology used.
@@ -215,19 +233,3 @@ In addition to components, dialogs, directives, pages, pipes, and services,
 there can also be other types of artefacts like guards and interceptors, they
 should follow a similar folder structure. Any type of artefact can be absent in
 a specific feature.
-
-## Exploration workflow
-
-1. `npx nx show projects --type app` / `--type lib` to find candidate projects.
-   Ignore the root project which matches the package name specified in
-   `package.json`.
-2. `npx nx show project <project>` to get `root`, `sourceRoot` and the target
-   executors (this also tells you whether the project is Angular).
-3. List `<sourceRoot>` to see which features exist. Reuse an existing feature
-   before creating a new one.
-4. Read one or two existing artefacts of the same type in that feature (and
-   `<feature>.routes.ts`, and `app.routes.ts` for how features are wired in).
-   Match their conventions.
-5. Check dependencies with `npx nx graph --print` (and `tsconfig.base.json`
-   paths for library import aliases) before importing across projects.
-6. To create artefacts, hand over to the `toolkit-nx` skill.
