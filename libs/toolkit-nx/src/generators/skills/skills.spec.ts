@@ -27,14 +27,19 @@ describe('Skills Generator', () => {
     const agentsTarget = '/.agents/skills';
     const claudeTarget = '/.claude/skills';
 
-    expect(tree.children(agentsTarget).length).toBe(2);
+    expect(tree.exists(`/.agents/AGENTS.md`)).toBe(true);
+    expect(tree.exists(`/.claude/CLAUDE.md`)).toBe(true);
+
+    expect(tree.children(agentsTarget).length).toBe(3);
     expect(tree.exists(`${agentsTarget}/toolkit-nx/SKILL.md`)).toBe(true);
     expect(tree.children(`${agentsTarget}/toolkit-nx/references`).length).toBe(6);
     expect(tree.exists(`${agentsTarget}/workspace/SKILL.md`)).toBe(true);
+    expect(tree.exists(`${agentsTarget}/development-workflow/SKILL.md`)).toBe(true);
 
-    expect(tree.children(claudeTarget).length).toBe(2);
+    expect(tree.children(claudeTarget).length).toBe(3);
     expect(tree.exists(`${claudeTarget}/toolkit-nx/SKILL.md`)).toBe(true);
     expect(tree.children(`${claudeTarget}/toolkit-nx/references`).length).toBe(6);
     expect(tree.exists(`${claudeTarget}/workspace/SKILL.md`)).toBe(true);
+    expect(tree.exists(`${claudeTarget}/development-workflow/SKILL.md`)).toBe(true);
   });
 });
