@@ -20,6 +20,9 @@
     "paths": {
       "@hexmode/toolkit-nx": [
         "./libs/toolkit-nx/src/index.ts"
+      ],
+      "@hexmode/toolkit-rx": [
+        "./libs/toolkit-rx/src/index.ts"
       ]
     }
   },

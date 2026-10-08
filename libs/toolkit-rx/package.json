@@ -1,0 +1,8 @@
+{
+  "name": "@hexmode/toolkit-rx",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/core": "^22.2.0"
+  }
+}
