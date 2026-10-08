@@ -3,15 +3,16 @@ name: workspace
 description: |
   How this Nx monorepo is organised and how to explore it. Use BEFORE writing
   or changing code in this workspace: to find which project/feature owns
-  something, where a new file should go, how projects depend on each other,
-  or which lint/test/build targets to run. Use instead of guessing paths or
-  browsing directories blindly.
+  something, where a new file should go, which targets a project has, or how
+  projects depend on each other. Use instead of guessing paths or browsing
+  directories blindly.
 ---
 
 This is a monorepo workspace managed by NX. It is composed of multiple
 application and library projects, each with its own set of files and
 dependencies. Use this skill to navigate and explore the workspace and
-understand how the projects are organised and interconnected.
+understand how the projects are organised and interconnected. The overall
+process for changing code is described in the `development-workflow` skill.
 
 ## Exploration workflow
 
@@ -26,7 +27,7 @@ understand how the projects are organised and interconnected.
    Match their conventions.
 5. Check dependencies with `npx nx graph --print` (and `tsconfig.base.json`
    paths for library import aliases) before importing across projects.
-6. To create artefacts, hand over to the `toolkit-nx` skill.
+6. To create artefacts, use the `toolkit-nx` skill.
 
 ## List all projects
 
@@ -108,62 +109,8 @@ There are four targets in the example output: `lint`, `test`,
 `nx-release-publish`, and `build`.
 
 Different projects will have different properties listed based on their type,
-configuration, and technology used.
-
-## Performing target tasks
-
-### Running targets for a single project
-
-NX target task runner is using the following syntax:
-
-```shell
-npx nx run <project-name>:<target-name>
-```
-
-For example, to run the `lint` target for the `shared-ui` project, you would use
-the following command:
-
-```shell
-npx nx run shared-ui:lint
-```
-
-### Running targets for all projects
-
-Use `run-many` to run targets for all projects using the following syntax:
-
-```shell
-npx nx run-many -t <target-name>
-```
-
-For example, to run the `lint` target for all projects, you would use the
-following command:
-
-```shell
-npx nx run-many -t lint
-```
-
-It is also possible to run multiple targets, pass them as a comma-separated
-list:
-
-```shell
-npx nx run-many -t lint,test
-```
-
-### Running targets only for affected projects
-
-To run specific targets only for projects which have code changes, use the
-following syntax:
-
-```shell
-npx nx affected -t <target-name>
-```
-
-For example, to run the `lint` target for all projects affected by changes, you
-would use the following command:
-
-```shell
-npx nx affected -t lint
-```
+configuration, and technology used. How to run targets to verify code is
+described in the `development-workflow` skill.
 
 ## Angular project structure
 

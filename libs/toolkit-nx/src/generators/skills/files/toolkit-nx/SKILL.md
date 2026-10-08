@@ -19,7 +19,7 @@ Do NOT use `nx g @nx/angular:*`, `ng generate`.
 
 # Using @hexmode/toolkit-nx generators
 
-## 1. Run the correct generator first
+## Run the correct generator
 
 - To create a new component or dialog, read
   [create-component.md](references/create-component.md)
@@ -32,62 +32,14 @@ Do NOT use `nx g @nx/angular:*`, `ng generate`.
 - To create a new service, read
   [create-service.md](references/create-service.md)
 
-### Layout of generated code
+## Layout of generated code
 
-- Application projects live inside `apps/`, library projects live inside
-  `libs/`. `<projectRoot>` refers to the root directory of the project, for
-  example, a `<projectRoot>` for `backoffice` is application `apps/backoffice`.
-- Features live inside `<projectRoot>/src/`. For example, feature `users` will
-  be inside `<projectRoot>/src/users`.
-- Angular artefacts live inside features grouped by their type:
-  `<projectRoot>/src/<feature>/{components,pages,dialogs,services,pipes,directives}/<name>`.
-  This path is referred as `<artefactRoot>`.
-- Generated files like `.ts`, `.scss`, `.html`, `.spec.ts`, etc live inside
-  `<artefactRoot>`.
-- Components, pages, and dialogs are composed of `.ts`, `.html`, `.scss`,
-  `.spec.ts` and `.stories.ts` files.
-- Services, pipes, and directives are composed of `.ts` and `.spec.ts` files.
+Generators place files according to the feature layout described in the "Angular
+project structure" section of the `workspace` skill. Use it to check the
+`--dry-run` output before running a generator for real.
 
-## 2. Modify Generated Code (If Needed)
+## After generating
 
-Code generator provides a starting point. Modify the output as needed to:
-
-- Add or modify functionality as requested.
-- Adjust imports, exports, or configurations.
-- Integrate with existing code patterns.
-
-## 3. Verify Code Changes
-
-Verify that the new code works. Keep in mind that the changes you make with a
-generator or subsequent modifications might impact various projects inside the
-workspace, so it's usually not enough to only run targets for the artefact you
-just created.
-
-### Lint the code
-
-Run the following command to lint (perform static code analysis) the code:
-
-```shell
-npm run lint
-```
-
-### Run unit tests
-
-Run the following command to test the code:
-
-```shell
-npm run test
-```
-
-If verification fails with manageable issues (a few lint errors, minor type
-issues), fix them. If issues are extensive, attempt obvious fixes first, then
-escalate to the user with details about what was generated, what's failing, and
-what you've attempted.
-
-## 4. Format The Code
-
-Once the code is ready, verified, and tested, run a code formatter:
-
-```shell
-npm run format
-```
+Generated code is only a starting point. Continue with the
+`development-workflow` skill to implement the requested functionality, verify,
+and format the code.
