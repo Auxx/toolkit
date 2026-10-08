@@ -15,9 +15,8 @@ understand how the projects are organised and interconnected.
 
 ## Exploration workflow
 
-1. `npx nx show projects --type app` / `--type lib` to find candidate projects.
-   Ignore the root project which matches the package name specified in
-   `package.json`.
+1. `npx nx show projects` to find candidate projects. Ignore the root project
+   which matches the package name specified in `package.json`.
 2. `npx nx show project <project>` to get `root`, `sourceRoot` and the target
    executors (this also tells you whether the project is Angular).
 3. List `<sourceRoot>` to see which features exist. Reuse an existing feature
@@ -37,13 +36,13 @@ returns all projects, both application and library, as a list in JSON format.
 Example output:
 
 ```json
-["toolkit-nx","test","@toolkit/source"]
+["my-app","shared-ui","@my-workspace/source"]
 ```
 
 This example output indicates that there are three projects in the workspace:
-`toolkit-nx`, `test`, and `@toolkit/source`. Note that a project with a name
-format `@<workspace>/source` matches the package name in `package.json` - this
-is a root project, ignore it.
+`shared-ui`, `my-app`, and `@my-workspace/source`. Note that a project with a
+name format `@<workspace>/source` matches the package name in `package.json` -
+this is a root project, ignore it.
 
 The list of projects will change over time depending on the requirements and
 implementation details.
@@ -65,8 +64,10 @@ npx nx show projects --affected
 
 ## Workspace dependency graph
 
-To visualise the dependency graph of the workspace, use the
-`npx nx graph --print` command.
+`npx nx graph --print` prints the project graph as JSON. The part that matters
+is `graph.dependencies`: a map from each project name to the projects it depends
+on (`[{ "source": "a", "target": "b", "type": "static" }]`). Ignore
+`graph.nodes`, which repeats every project's full configuration.
 
 ## Get project details
 
@@ -81,9 +82,9 @@ Example output:
 ```json
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "name": "toolkit-nx",
-  "root": "libs/toolkit-nx",
-  "sourceRoot": "libs/toolkit-nx/src",
+  "name": "shared-ui",
+  "root": "libs/shared-ui",
+  "sourceRoot": "libs/shared-ui/src",
   "projectType": "library",
   "targets": {
     "lint": { ... },
@@ -91,8 +92,7 @@ Example output:
     "nx-release-publish": { ... },
     "build": { ... }
   },
-  "tags": ["npm:public"],
-  "implicitDependencies": []
+  "tags": ["npm:public"]
 }
 ```
 
@@ -107,12 +107,6 @@ performed on the project, such as linting, testing, building, or publishing.
 There are four targets in the example output: `lint`, `test`,
 `nx-release-publish`, and `build`.
 
-`implicitDependencies` lists only dependencies declared manually in the project
-configuration. It is usually empty. Do not use it to find what a project depends
-on; use `npx nx graph --print` instead (see below). This is NOT a list of
-third-party dependencies. Third-party dependencies are specified in
-`package.json`.
-
 Different projects will have different properties listed based on their type,
 configuration, and technology used.
 
@@ -126,11 +120,11 @@ NX target task runner is using the following syntax:
 npx nx run <project-name>:<target-name>
 ```
 
-For example, to run the `lint` target for the `toolkit-nx` project, you would
-use the following command:
+For example, to run the `lint` target for the `shared-ui` project, you would use
+the following command:
 
 ```shell
-npx nx run toolkit-nx:lint
+npx nx run shared-ui:lint
 ```
 
 ### Running targets for all projects
