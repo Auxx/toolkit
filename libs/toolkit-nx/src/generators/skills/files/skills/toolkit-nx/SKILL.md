@@ -38,6 +38,12 @@ Components, dialogs and pages can include Transloco boilerplate with
 `--translations=true`. It requires `@jsverse/transloco` to be installed and
 configured; read [translations.md](references/translations.md) before using it.
 
+## Storybook
+
+Components, dialogs and pages get a `.stories.ts` file only with
+`--storybook=true`. It requires `storybook` and `@storybook/angular` to be
+installed; read [storybook.md](references/storybook.md) before using it.
+
 ## Layout of generated code
 
 Generators place files according to the feature layout described in the "Angular

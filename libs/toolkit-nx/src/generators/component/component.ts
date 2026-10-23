@@ -16,6 +16,8 @@ interface LastRun {
 
 const translationsDependency = '@jsverse/transloco';
 
+const storybookDependencies = [ 'storybook', '@storybook/angular' ];
+
 const lastRun: LastRun = {
   success: true,
   className: '',
@@ -30,6 +32,10 @@ export async function componentGenerator(tree: Tree, options: ComponentGenerator
     assertDependencyInstalled(tree, translationsDependency, 'translations support');
   }
 
+  if (options.storybook === true) {
+    storybookDependencies.forEach(dependency => assertDependencyInstalled(tree, dependency, 'Storybook stories'));
+  }
+
   const targetPath = componentPath(tree, options.project, options.feature, options.name, options.type);
   const artifact = names(options.name);
 
@@ -38,19 +44,20 @@ export async function componentGenerator(tree: Tree, options: ComponentGenerator
   const fileName = `${artifact.fileName}.${getComponentSuffix(options.type)}`;
   const selector = createSelector(tree, options.project, options.name);
 
-  generateFiles(
-    tree,
-    joinPathFragments(__dirname, 'files'),
-    targetPath,
-    {
-      entityName,
-      className,
-      fileName,
-      selector,
-      translations: options.translations,
-      projectName: names(options.project).propertyName
-    }
-  );
+  const substitutions = {
+    entityName,
+    className,
+    fileName,
+    selector,
+    translations: options.translations,
+    projectName: names(options.project).propertyName
+  };
+
+  generateFiles(tree, joinPathFragments(__dirname, 'files', 'component'), targetPath, substitutions);
+
+  if (options.storybook === true) {
+    generateFiles(tree, joinPathFragments(__dirname, 'files', 'storybook'), targetPath, substitutions);
+  }
 
   lastRun.success = true;
   lastRun.className = className;

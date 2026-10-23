@@ -37,13 +37,63 @@ describe('Component Generator', () => {
 
     const targetPath = `apps/${appName}/src/${featureName}/components/${componentName}`;
 
-    expect(tree.children(targetPath).length).toBe(5);
+    expect(tree.children(targetPath).length).toBe(4);
     expect(tree.exists(`${targetPath}/${componentName}.component.scss`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.component.html`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.component.spec.ts`)).toBe(true);
-    expect(tree.exists(`${targetPath}/${componentName}.component.stories.ts`)).toBe(true);
+    expect(tree.exists(`${targetPath}/${componentName}.component.stories.ts`)).toBe(false);
     expect(tree.exists(`${targetPath}/${componentName}.component.ts`)).toBe(true);
   });
+
+  it('should generate Storybook stories', async () => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+    updateJson(tree, 'package.json', json => ({
+      ...json,
+      devDependencies: { storybook: '10.5.0', '@storybook/angular': '10.5.0' }
+    }));
+
+    await componentGenerator(tree, {
+      name: componentName,
+      project: appName,
+      feature: featureName,
+      type: 'component',
+      storybook: true
+    });
+
+    const targetPath = `apps/${appName}/src/${featureName}/components/${componentName}`;
+
+    expect(tree.children(targetPath).length).toBe(5);
+
+    const stories = tree.read(`${targetPath}/${componentName}.component.stories.ts`, 'utf-8')?.toString();
+    expect(stories).toContain('import { Meta, StoryObj } from \'@storybook/angular\';');
+    expect(stories).toContain('template: `<app-user-list></app-user-list>`');
+  });
+
+  it.each`
+    installed                 | missing
+    ${{}}                     | ${'storybook'}
+    ${{ storybook: '10.5.0' }} | ${'@storybook/angular'}
+  `(
+    'should fail if Storybook stories are requested and $missing is not installed',
+    async ({ installed, missing }) => {
+      tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+      updateJson(tree, 'package.json', json => ({ ...json, devDependencies: installed }));
+
+      await expect(() =>
+        componentGenerator(tree, {
+          name: componentName,
+          project: appName,
+          feature: featureName,
+          type: 'component',
+          storybook: true
+        })
+      )
+        .rejects
+        .toThrow(`Dependency "${missing}" is not installed.`);
+
+      expect(tree.exists(`apps/${appName}/src/${featureName}/components/${componentName}`)).toBe(false);
+    }
+  );
 
   it('should generate a component with translations support', async () => {
     tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');

@@ -1,4 +1,4 @@
-import { ComponentType } from '../../lib/component-types/component.types';
+import { ComponentType } from '../../lib/component-types/component-types';
 
 export interface ComponentGeneratorSchema {
   name: string;
@@ -7,4 +7,5 @@ export interface ComponentGeneratorSchema {
   type: ComponentType;
 
   translations?: boolean;
+  storybook?: boolean;
 }

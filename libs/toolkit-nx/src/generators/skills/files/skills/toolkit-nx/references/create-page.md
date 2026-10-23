@@ -13,6 +13,8 @@ registers a new route for the page - there is no need to add it manually.
   use the `--translations=true` argument, which adds boilerplate for the
   Transloco translation library. See [translations.md](translations.md) for the
   requirements.
+- To add Storybook stories for a new page, use the `--storybook=true` argument.
+  See [storybook.md](storybook.md) for when to use it and the requirements.
 - All pages should be part of features inside the project, and a feature must
   exist before running the generator. If the required feature does not exist,
   run the feature generator first.

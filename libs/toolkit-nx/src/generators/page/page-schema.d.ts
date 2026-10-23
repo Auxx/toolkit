@@ -4,4 +4,5 @@ export interface PageGeneratorSchema {
   feature: string;
 
   translations?: boolean;
+  storybook?: boolean;
 }

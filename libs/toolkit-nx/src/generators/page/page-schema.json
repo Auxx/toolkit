@@ -29,6 +29,11 @@
       "type": "boolean",
       "description": "Add translation support",
       "default": false
+    },
+    "storybook": {
+      "type": "boolean",
+      "description": "Generate Storybook stories",
+      "default": false
     }
   },
   "required": ["name", "project", "feature"]

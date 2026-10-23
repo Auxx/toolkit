@@ -32,13 +32,13 @@ describe('Skills Generator', () => {
 
     expect(tree.children(agentsTarget).length).toBe(3);
     expect(tree.exists(`${agentsTarget}/toolkit-nx/SKILL.md`)).toBe(true);
-    expect(tree.children(`${agentsTarget}/toolkit-nx/references`).length).toBe(7);
+    expect(tree.children(`${agentsTarget}/toolkit-nx/references`).length).toBe(8);
     expect(tree.exists(`${agentsTarget}/workspace/SKILL.md`)).toBe(true);
     expect(tree.exists(`${agentsTarget}/development-workflow/SKILL.md`)).toBe(true);
 
     expect(tree.children(claudeTarget).length).toBe(3);
     expect(tree.exists(`${claudeTarget}/toolkit-nx/SKILL.md`)).toBe(true);
-    expect(tree.children(`${claudeTarget}/toolkit-nx/references`).length).toBe(7);
+    expect(tree.children(`${claudeTarget}/toolkit-nx/references`).length).toBe(8);
     expect(tree.exists(`${claudeTarget}/workspace/SKILL.md`)).toBe(true);
     expect(tree.exists(`${claudeTarget}/development-workflow/SKILL.md`)).toBe(true);
   });

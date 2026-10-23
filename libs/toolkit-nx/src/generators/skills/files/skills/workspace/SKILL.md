@@ -167,6 +167,8 @@ directory layout of a feature:
 └── ...
 ```
 
+Files marked `.stories.ts` exist only in projects that use Storybook.
+
 Folder `<sourceRoot>/app` is a feature called `app`. This is a non-standard
 approach to Angular projects.
 
