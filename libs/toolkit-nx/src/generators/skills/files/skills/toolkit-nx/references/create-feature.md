@@ -1,8 +1,32 @@
 # create-feature
 
 Create a new feature inside an Angular application project. This generator
-creates an empty routes file, but features are not wired automatically; the user
-should add it manually.
+creates an empty `<feature>.routes.ts` file and wires it into the application
+routes automatically - there is no need to add the route manually.
+
+## Routing
+
+The generator adds a lazy-loaded route to the routes array in
+`<sourceRoot>/app/app.routes.ts` (the first variable of type `Route[]` or
+`Routes`):
+
+```ts
+{ path: '<feature-name>', loadChildren: () => import('../<feature-name>/<feature-name>.routes').then(m => m.routes) }
+```
+
+- The route is inserted before the wildcard route (`path: '**'`), if there is
+  one; otherwise it is appended.
+- Pages created with the page generator are registered in `<feature>.routes.ts`,
+  so they are reachable at `/<feature-name>/<page-name>`.
+- If `app.routes.ts` does not exist (for example, in a library), or has no
+  routes array, the generator still creates the feature and leaves routing
+  unchanged. It prints
+  `"<path>" does not exist. Add the routes of feature "<feature-name>" manually.`
+  or `No routes array of type Route[] or Routes found in "<path>". …`. In that
+  case, wire the feature into the routes the project uses yourself, following
+  the snippet above, and mention it in your report.
+- Change the generated route only if the task needs something else (for example,
+  a different URL, a guard, or a non-lazy route).
 
 ## Key Principles
 

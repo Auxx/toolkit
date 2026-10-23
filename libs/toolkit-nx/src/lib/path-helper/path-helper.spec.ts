@@ -1,6 +1,7 @@
 import { addProjectConfiguration, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import {
+  appRoutesPath,
   componentContainerPath,
   componentPath,
   featureComponentPath,
@@ -8,6 +9,7 @@ import {
   featureRoutesPath,
   projectPath,
   projectSrcPath,
+  relativeImportPath,
   toKebabCase
 } from './path-helper';
 
@@ -145,6 +147,23 @@ describe('Path Helper', () => {
     it('should normalise feature name', () => {
       expect(featureRoutesPath(tree, appName, 'userProfile'))
         .toBe(`apps/${appName}/src/user-profile/user-profile.routes.ts`);
+    });
+  });
+
+  describe('appRoutesPath', () => {
+    it('should return path to the app routes file', () => {
+      expect(appRoutesPath(tree, appName)).toBe(`apps/${appName}/src/app/app.routes.ts`);
+    });
+  });
+
+  describe('relativeImportPath', () => {
+    it.each`
+    fromFile                     | toFile                                  | expected
+    ${'src/app/app.routes.ts'}   | ${'src/orders/orders.routes.ts'}        | ${'../orders/orders.routes'}
+    ${'src/orders/orders.routes.ts'} | ${'src/orders/pages/list/list.page.ts'} | ${'./pages/list/list.page'}
+    ${'src/app/app.routes.ts'}   | ${'src/app/app.config.ts'}              | ${'./app.config'}
+    `('should return import path from $fromFile to $toFile', ({ fromFile, toFile, expected }) => {
+      expect(relativeImportPath(fromFile, toFile)).toBe(expected);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { Tree } from '@nx/devkit';
 import * as path from 'node:path';
-import { Project, SourceFile, SyntaxKind, VariableDeclaration } from 'ts-morph';
+import { Expression, IndentationText, Project, SourceFile, SyntaxKind, VariableDeclaration } from 'ts-morph';
 
 export interface CodeMorphStateBase {
   tree: Tree;
@@ -120,7 +120,7 @@ export function morph<T>(
   ...operators: CodeMorphOperator<any, any>[]
 ): CodeMorphResult<unknown> {
   const fileName = path.basename(filePath);
-  const project = new Project();
+  const project = new Project({ manipulationSettings: { indentationText: IndentationText.TwoSpaces } });
   const code = tree.read(filePath)?.toString() ?? '';
   const sourceFile = project.createSourceFile(fileName, code);
 
@@ -170,6 +170,25 @@ export function variable<T>(name: string, kind?: SyntaxKind) {
   };
 }
 
+export function variableOfType<T>(typeNames: string[], kind?: SyntaxKind) {
+  const normalise = (typeName: string) => typeName.replace(/\s/g, '');
+  const expected = typeNames.map(normalise);
+
+  return (state: CodeMorphState<T>): CodeMorphState<VariableDeclaration> => {
+    const decl = state.sourceFile.getVariableDeclarations().find(d => {
+      const typeNode = d.getTypeNode();
+      const isTypeMatched = typeNode !== undefined && expected.includes(normalise(typeNode.getText()));
+      const isKindMatched = kind === undefined || d.getInitializer()?.getKind() === kind;
+
+      return isTypeMatched && isKindMatched;
+    });
+
+    return decl === undefined
+      ? { ...state, withResult: false }
+      : { ...state, withResult: true, result: decl };
+  };
+}
+
 export function modifyVariable(mod: (decl: VariableDeclaration) => void) {
   return (state: CodeMorphState<VariableDeclaration>): CodeMorphState<VariableDeclaration> => {
     if (state.withResult) {
@@ -183,6 +202,23 @@ export function modifyVariable(mod: (decl: VariableDeclaration) => void) {
 export function addImportDeclaration<T>(namedImports: string[], moduleSpecifier: string) {
   return (state: CodeMorphState<T>): CodeMorphState<T> => {
     state.sourceFile.addImportDeclaration({ namedImports, moduleSpecifier });
+    return state;
+  };
+}
+
+export function insertArrayElement(element: string, before?: (existing: Expression) => boolean) {
+  return (state: CodeMorphState<VariableDeclaration>): CodeMorphState<VariableDeclaration> => {
+    const array = state.withResult
+      ? state.result.getInitializerIfKind(SyntaxKind.ArrayLiteralExpression)
+      : undefined;
+
+    if (array !== undefined) {
+      const elements = array.getElements();
+      const index = before === undefined ? -1 : elements.findIndex(before);
+
+      array.insertElement(index === -1 ? elements.length : index, element, { useNewLines: true });
+    }
+
     return state;
   };
 }

@@ -1,4 +1,5 @@
 import { joinPathFragments, names, readProjectConfiguration, Tree } from '@nx/devkit';
+import * as path from 'node:path';
 import { ComponentType, getComponentFolder } from '../component-types/component-types';
 
 export function toKebabCase(name: string): string {
@@ -54,4 +55,16 @@ export function componentPath(
 
 export function featureRoutesPath(tree: Tree, projectName: string, featureName: string): string {
   return joinPathFragments(featurePath(tree, projectName, featureName), `${toKebabCase(featureName)}.routes.ts`);
+}
+
+export const appFeatureName = 'app';
+
+export function appRoutesPath(tree: Tree, projectName: string): string {
+  return featureRoutesPath(tree, projectName, appFeatureName);
+}
+
+export function relativeImportPath(fromFile: string, toFile: string): string {
+  const relative = path.posix.relative(path.posix.dirname(fromFile), toFile).replace(/\.ts$/, '');
+
+  return relative.startsWith('.') ? relative : `./${relative}`;
 }
