@@ -42,4 +42,16 @@ describe('Directive Generator', () => {
 
     console.log(tree.read(`${targetPath}/${pipeName}.directive.spec.ts`)?.toString());
   });
+
+  it('should not overwrite an existing directive', async () => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+    const existing = `apps/${appName}/src/${featureName}/directives/${pipeName}/${pipeName}.directive.ts`;
+    tree.write(existing, '// edited by user');
+
+    await expect(() => directiveGenerator(tree, { name: pipeName, project: appName, feature: featureName }))
+      .rejects
+      .toThrow(`Directive "${pipeName}" already exists in feature "${featureName}"`);
+
+    expect(tree.read(existing, 'utf-8')).toBe('// edited by user');
+  });
 });

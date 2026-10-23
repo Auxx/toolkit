@@ -60,9 +60,63 @@ how the result is used, not in how it is generated:
 - Selectors use the project's `prefix` from `project.json` (`app` by default,
   often `lib` in libraries).
 
-Generators place files according to the feature layout described in the "Angular
-project structure" section of the `workspace` skill. Use it to check the
-`--dry-run` output before running a generator for real.
+## Dry run
+
+Always run a generator with `--dry-run` first. A dry run does everything a real
+run does - validates the arguments, checks that the feature and dependencies
+exist, computes every file - but writes nothing. It prints the planned changes
+and ends with `NOTE: The "dryRun" flag means no changes were made.` Run the
+generator for real only when the dry-run output is what you expect; the real run
+prints the same lines.
+
+Read the output line by line:
+
+- `CREATE <path>` - a new file. Check that the path follows the feature layout
+  from the "Angular project structure" section of the `workspace` skill:
+  `<sourceRoot>/<feature>/<type-folder>/<name>/<name>.<type>.<ext>`, with
+  kebab-case names.
+- `UPDATE <path>` - an existing file will be changed. This is expected only for
+  routes files: `<feature>.routes.ts` (page generator) and `app/app.routes.ts`
+  (feature generator, or page generator in the `app` feature). An `UPDATE` on
+  any other file is unexpected: stop and tell the user instead of running the
+  generator.
+- `NX <message>` and exit code 1 - the generator failed and nothing was
+  generated. Look the message up in [Errors](#errors).
+
+Expected output for each generator (`[]` marks optional files):
+
+| Generator                      | Expected lines                                                                                                                          |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `feature`                      | `CREATE <feature>/<feature>.routes.ts`, `UPDATE app/app.routes.ts` (applications only)                                                  |
+| `page`                         | `CREATE` `.page.ts`, `.page.html`, `.page.scss`, `.page.spec.ts`, [`.page.stories.ts`] in `pages/<name>/`, `UPDATE <feature>.routes.ts` |
+| `component`                    | `CREATE` `.component.ts`, `.html`, `.scss`, `.spec.ts`, [`.stories.ts`] in `components/<name>/`                                         |
+| `component --type=dialog`      | `CREATE` `.dialog.ts`, `.html`, `.scss`, `.spec.ts`, [`.stories.ts`] in `dialogs/<name>/`                                               |
+| `service`, `pipe`, `directive` | `CREATE` `.<type>.ts` and `.<type>.spec.ts` in `services/`, `pipes/` or `directives/<name>/`                                            |
+
+## Errors
+
+When a generator fails, it prints `NX <message>`, exits with code 1 and writes
+nothing - Nx discards all changes of a failed run, so there is nothing to clean
+up. Fix the cause and run the dry run again.
+
+| Message                                                                                  | Meaning and what to do                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Cannot find configuration for '<project>'`                                              | No project with this name. Get the exact name from `npx nx show projects` and pass it unchanged as `--project`.                                                                                                                                                                                                                                           |
+| `No source folder for "<project>"`                                                       | The project has no `sourceRoot` in its configuration, so the generators cannot place files. Tell the user; do not edit the project configuration on your own.                                                                                                                                                                                             |
+| `Feature "<feature>" does not exist.`                                                    | Run the feature generator first. Check the spelling too: names are converted to kebab-case, so `--feature=userProfile` means folder `user-profile`.                                                                                                                                                                                                       |
+| `<Type> "<name>" already exists in feature "<feature>" (<path>).`                        | An artefact of this type and name is already in the feature (`<Type>` is `Component`, `Page`, `Dialog`, `Service`, `Pipe` or `Directive`). Generators never overwrite existing artefacts. Edit the existing one, or pick another name if you really need a second artefact. Names are compared in kebab-case, so `userList` and `user-list` are the same. |
+| `Feature "<feature>" already exists.`                                                    | The feature is already there (`app` always exists in applications). Skip the feature generator and use the existing feature.                                                                                                                                                                                                                              |
+| `Dependency "<package>" is not installed. It is required for ...`                        | An option needs a package the workspace does not have. See [translations.md](references/translations.md) or [storybook.md](references/storybook.md). Do not install it on your own.                                                                                                                                                                       |
+| `No routes array of type Route[] or Routes found in "<path>". Page ... was not created.` | The page generator cannot find the routes array in the routes file. Restore an exported `Route[]` or `Routes` array in that file, or ask the user, then run again.                                                                                                                                                                                        |
+| `Required property '<option>' is missing`                                                | A required option is missing. Pass it explicitly; with `--no-interactive` the generator never prompts.                                                                                                                                                                                                                                                    |
+| `Property '<option>' does not match the schema. ...`                                     | Invalid option value. For example, `--type` accepts only `component`, `page` and `dialog`; for other artefact types see [Artefacts without a generator](#artefacts-without-a-generator).                                                                                                                                                                  |
+| `Malformed block: ...`                                                                   | Only from the `skills` generator: the toolkit block markers in `AGENTS.md` or `CLAUDE.md` are broken. Tell the user.                                                                                                                                                                                                                                      |
+
+The feature generator can also print a warning and still succeed (exit code 0):
+`"<path>" does not exist. Add the routes of feature ... manually.` or
+`No routes array ... Add the routes of feature ... manually.` The feature was
+created but not wired into any routes - see
+[create-feature.md](references/create-feature.md).
 
 ## Artefacts without a generator
 

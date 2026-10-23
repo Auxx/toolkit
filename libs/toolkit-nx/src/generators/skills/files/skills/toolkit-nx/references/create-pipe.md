@@ -5,7 +5,7 @@ Create a new Angular pipe.
 ## Key Principles
 
 - **Always use `--no-interactive`** - Prevents prompts that would hang execution
-- Angular pipe generator is invoked using `nx g @hexmode/toolkit-nx:pipe`
+- Angular pipe generator is invoked using `npx nx g @hexmode/toolkit-nx:pipe`
   followed by required arguments.
 - All pipes should be part of features inside the project, and a feature must
   exist before running the generator. If the required feature does not exist,
@@ -28,16 +28,17 @@ Create a new Angular pipe.
 correct location:
 
 ```shell
-nx g @hexmode/toolkit-nx:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive --dry-run
+npx nx g @hexmode/toolkit-nx:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive --dry-run
 ```
 
-Review the output carefully. If files would be created in the wrong location,
-adjust your options.
+Check the output as described in [Dry run](../SKILL.md#dry-run). Expect `CREATE`
+lines for `<name>.pipe.ts` and `<name>.pipe.spec.ts` in
+`<feature>/pipes/<name>/`, and no `UPDATE` lines.
 
 ### 3. Run the Generator
 
 Execute the generator:
 
 ```shell
-nx g @hexmode/toolkit-nx:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive
+npx nx g @hexmode/toolkit-nx:pipe --project=<project-name> --feature=<feature-name> --name=<pipe-name> --no-interactive
 ```

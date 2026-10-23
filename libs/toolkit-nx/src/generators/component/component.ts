@@ -2,6 +2,9 @@ import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit';
 import { createSelector, getComponentClassSuffix, getComponentSuffix } from '../../lib/component-types/component-types';
 import { componentPath } from '../../lib/path-helper/path-helper';
 import {
+  assertArtefactDoesNotExist
+} from '../../lib/validators/assert-artefact-does-not-exist/assert-artefact-does-not-exist';
+import {
   assertDependencyInstalled
 } from '../../lib/validators/assert-dependency-installed/assert-dependency-installed';
 import { assertFeatureExists } from '../../lib/validators/assert-feature-exists/assert-feature-exists';
@@ -27,6 +30,7 @@ const lastRun: LastRun = {
 
 export async function componentGenerator(tree: Tree, options: ComponentGeneratorSchema) {
   assertFeatureExists(tree, options.project, options.feature);
+  assertArtefactDoesNotExist(tree, options.project, options.feature, options.name, options.type);
 
   if (options.translations === true) {
     assertDependencyInstalled(tree, translationsDependency, 'translations support');

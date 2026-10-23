@@ -175,4 +175,20 @@ describe('Page Generator', () => {
       expect(tree.read(appRoutes, 'utf-8')).toBe(code);
     });
   });
+
+  it('should not overwrite an existing page or register a duplicate route', async () => {
+    await pageGenerator(tree, { name: componentName, project: appName, feature: featureName });
+
+    const routesPath = `apps/${appName}/src/${featureName}/${featureName}.routes.ts`;
+    const pagePath = `apps/${appName}/src/${featureName}/pages/${componentName}/${componentName}.page.ts`;
+    tree.write(pagePath, '// edited by user');
+    const routes = tree.read(routesPath, 'utf-8');
+
+    await expect(() => pageGenerator(tree, { name: componentName, project: appName, feature: featureName }))
+      .rejects
+      .toThrow(`Page "${componentName}" already exists in feature "${featureName}"`);
+
+    expect(tree.read(pagePath, 'utf-8')).toBe('// edited by user');
+    expect(tree.read(routesPath, 'utf-8')).toBe(routes);
+  });
 });

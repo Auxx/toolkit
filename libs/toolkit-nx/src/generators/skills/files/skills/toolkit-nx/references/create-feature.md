@@ -66,8 +66,8 @@ library knows about it until you expose it:
 ## Key Principles
 
 - **Always use `--no-interactive`** - Prevents prompts that would hang execution
-- Feature generator is invoked using `nx g @hexmode/toolkit-nx:feature` followed
-  by required arguments.
+- Feature generator is invoked using `npx nx g @hexmode/toolkit-nx:feature`
+  followed by required arguments.
 - All Angular artefacts should be part of features inside the project. Run this
   generator first if the required feature does not exist yet.
 
@@ -86,16 +86,17 @@ library knows about it until you expose it:
 correct location:
 
 ```shell
-nx g @hexmode/toolkit-nx:feature --project=<project-name> --name=<feature-name> --no-interactive --dry-run
+npx nx g @hexmode/toolkit-nx:feature --project=<project-name> --name=<feature-name> --no-interactive --dry-run
 ```
 
-Review the output carefully. If files are created in the wrong location, adjust
-your options.
+Check the output as described in [Dry run](../SKILL.md#dry-run). Expect
+`CREATE <sourceRoot>/<feature>/<feature>.routes.ts` and, in applications,
+`UPDATE <sourceRoot>/app/app.routes.ts`.
 
 ### 3. Run the Generator
 
 Execute the generator:
 
 ```shell
-nx g @hexmode/toolkit-nx:feature --project=<project-name> --name=<feature-name> --no-interactive
+npx nx g @hexmode/toolkit-nx:feature --project=<project-name> --name=<feature-name> --no-interactive
 ```

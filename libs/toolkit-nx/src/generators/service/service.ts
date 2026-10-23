@@ -1,11 +1,15 @@
 import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit';
 import { getComponentClassSuffix, getComponentSuffix } from '../../lib/component-types/component-types';
 import { componentPath } from '../../lib/path-helper/path-helper';
+import {
+  assertArtefactDoesNotExist
+} from '../../lib/validators/assert-artefact-does-not-exist/assert-artefact-does-not-exist';
 import { assertFeatureExists } from '../../lib/validators/assert-feature-exists/assert-feature-exists';
 import { ServiceGeneratorSchema } from './service-schema';
 
 export async function serviceGenerator(tree: Tree, options: ServiceGeneratorSchema) {
   assertFeatureExists(tree, options.project, options.feature);
+  assertArtefactDoesNotExist(tree, options.project, options.feature, options.name, 'service');
 
   const targetPath = componentPath(tree, options.project, options.feature, options.name, 'service');
   const artifact = names(options.name);

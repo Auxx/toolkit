@@ -40,8 +40,14 @@ correct location:
 npx nx g @hexmode/toolkit-nx:component --project=<project-name> --feature=<feature-name> --name=<component-name> --no-interactive --dry-run
 ```
 
-Review the output carefully. If files are created in the wrong location, adjust
-your options.
+Check the output as described in [Dry run](../SKILL.md#dry-run). Expect `CREATE`
+lines for `<name>.component.ts`, `.html`, `.scss` and `.spec.ts` (`.stories.ts`
+with `--storybook=true`) in `<feature>/components/<name>/` - or
+`<name>.dialog.*` in `<feature>/dialogs/<name>/` with `--type=dialog` - and no
+`UPDATE` lines.
+
+Use the page generator for pages, never `component --type=page`: it creates the
+page files but does not register a route.
 
 ### 3. Run the Generator
 

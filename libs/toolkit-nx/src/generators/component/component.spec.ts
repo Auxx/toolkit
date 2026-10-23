@@ -176,4 +176,23 @@ describe('Component Generator', () => {
       .rejects
       .toThrow();
   });
+
+  it.each`
+    type           | folder          | suffix
+    ${'component'} | ${'components'} | ${'component'}
+    ${'dialog'}    | ${'dialogs'}    | ${'dialog'}
+  `('should not overwrite an existing $type', async ({ type, folder, suffix }) => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+    const existing = `apps/${appName}/src/${featureName}/${folder}/${componentName}/${componentName}.${suffix}.ts`;
+    tree.write(existing, '// edited by user');
+
+    await expect(() => componentGenerator(tree, { name: componentName, project: appName, feature: featureName, type }))
+      .rejects
+      .toThrow(`"${componentName}" already exists in feature "${featureName}"`);
+
+    expect(tree.read(existing, 'utf-8')).toBe('// edited by user');
+    expect(tree.children(`apps/${appName}/src/${featureName}/${folder}/${componentName}`)).toEqual([
+      `${componentName}.${suffix}.ts`
+    ]);
+  });
 });

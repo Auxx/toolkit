@@ -5,8 +5,8 @@ Create a new Angular service.
 ## Key Principles
 
 - **Always use `--no-interactive`** - Prevents prompts that would hang execution
-- Angular service generator is invoked using `nx g @hexmode/toolkit-nx:service`
-  followed by required arguments.
+- Angular service generator is invoked using
+  `npx nx g @hexmode/toolkit-nx:service` followed by required arguments.
 - All services should be part of features inside the project, and a feature must
   exist before running the generator. If the required feature does not exist,
   run the feature generator first.
@@ -28,16 +28,17 @@ Create a new Angular service.
 correct location:
 
 ```shell
-nx g @hexmode/toolkit-nx:service --project=<project-name> --feature=<feature-name> --name=<service-name> --no-interactive --dry-run
+npx nx g @hexmode/toolkit-nx:service --project=<project-name> --feature=<feature-name> --name=<service-name> --no-interactive --dry-run
 ```
 
-Review the output carefully. If files are created in the wrong location, adjust
-your options.
+Check the output as described in [Dry run](../SKILL.md#dry-run). Expect `CREATE`
+lines for `<name>.service.ts` and `<name>.service.spec.ts` in
+`<feature>/services/<name>/`, and no `UPDATE` lines.
 
 ### 3. Run the Generator
 
 Execute the generator:
 
 ```shell
-nx g @hexmode/toolkit-nx:service --project=<project-name> --feature=<feature-name> --name=<service-name> --no-interactive
+npx nx g @hexmode/toolkit-nx:service --project=<project-name> --feature=<feature-name> --name=<service-name> --no-interactive
 ```

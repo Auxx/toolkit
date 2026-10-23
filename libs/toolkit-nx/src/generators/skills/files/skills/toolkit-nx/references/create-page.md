@@ -12,7 +12,7 @@ creates nothing; add or restore the routes array, then run it again.
 ## Key Principles
 
 - **Always use `--no-interactive`** - Prevents prompts that would hang execution
-- Angular page generator is invoked using `nx g @hexmode/toolkit-nx:page`
+- Angular page generator is invoked using `npx nx g @hexmode/toolkit-nx:page`
   followed by required arguments.
 - If a new page should contain any string messages which need to be translated,
   use the `--translations=true` argument, which adds boilerplate for the
@@ -41,16 +41,18 @@ creates nothing; add or restore the routes array, then run it again.
 correct location:
 
 ```shell
-nx g @hexmode/toolkit-nx:page --project=<project-name> --feature=<feature-name> --name=<page-name> --no-interactive --dry-run
+npx nx g @hexmode/toolkit-nx:page --project=<project-name> --feature=<feature-name> --name=<page-name> --no-interactive --dry-run
 ```
 
-Review the output carefully. If files are created in the wrong location, adjust
-your options.
+Check the output as described in [Dry run](../SKILL.md#dry-run). Expect `CREATE`
+lines for `<name>.page.ts`, `.html`, `.scss` and `.spec.ts` (`.stories.ts` with
+`--storybook=true`) in `<feature>/pages/<name>/`, and one `UPDATE` line for
+`<feature>.routes.ts` (`app.routes.ts` in the `app` feature).
 
 ### 3. Run the Generator
 
 Execute the generator:
 
 ```shell
-nx g @hexmode/toolkit-nx:page --project=<project-name> --feature=<feature-name> --name=<page-name> --no-interactive
+npx nx g @hexmode/toolkit-nx:page --project=<project-name> --feature=<feature-name> --name=<page-name> --no-interactive
 ```
