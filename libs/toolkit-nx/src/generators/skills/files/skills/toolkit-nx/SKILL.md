@@ -2,7 +2,8 @@
 name: toolkit-nx
 description: |
   Required workflow for adding ANY new Angular artefact (feature, page, component,
-  dialog, service, pipe, directive) to an application in this Nx workspace,
+  dialog, service, pipe, directive) to an Angular application or library in
+  this Nx workspace,
   using the @hexmode/toolkit-nx generators. Use whenever you are about to create a
   new .ts/.html/.scss Angular file, whether the user asked for it directly
   ("add a component", "create a service") or it is a step in a larger task
@@ -44,7 +45,19 @@ Components, dialogs and pages get a `.stories.ts` file only with
 `--storybook=true`. It requires `storybook` and `@storybook/angular` to be
 installed; read [storybook.md](references/storybook.md) before using it.
 
-## Layout of generated code
+## Applications and libraries
+
+All generators work the same way in Angular applications and Angular libraries:
+pass the project name as `--project`, whatever its type. The differences are in
+how the result is used, not in how it is generated:
+
+- Libraries have no `app` feature, so a new feature is not wired into any routes
+  automatically. Expose it through the library's public API instead - see
+  [create-feature.md](references/create-feature.md#features-in-libraries).
+- Artefacts that other projects use must be exported from the library's entry
+  point (usually `<sourceRoot>/index.ts`).
+- Selectors use the project's `prefix` from `project.json` (`app` by default,
+  often `lib` in libraries).
 
 Generators place files according to the feature layout described in the "Angular
 project structure" section of the `workspace` skill. Use it to check the

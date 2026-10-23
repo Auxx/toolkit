@@ -17,9 +17,10 @@ boilerplate for the [Transloco](https://jsverse.gitbook.io/transloco) library:
 - `@jsverse/transloco` must be listed in `dependencies` or `devDependencies` of
   the workspace `package.json`. If it is not, the generator fails with
   `Dependency "@jsverse/transloco" is not installed.` and creates no files.
-- Transloco must be configured in the application (for example,
-  `provideTransloco(...)` in `app.config.ts` with a loader). Check the app
-  config before generating; the generator does not configure it.
+- Transloco must be configured in the application, for example with
+  `provideTransloco(...)` in `app.config.ts` and a loader. For an artefact in a
+  library, check the applications that use the library. The generator does not
+  configure Transloco.
 
 ## If Transloco is missing
 

@@ -121,12 +121,16 @@ project, get project details from NX.
 
 Angular projects have `targets.build.executor` property set and it contains word
 `angular`. For example, `@angular/build:application` or
-`@angular-devkit/build-angular:browser`.
+`@angular-devkit/build-angular:browser` for applications, and
+`@nx/angular:package` or `@nx/angular:ng-packagr-lite` for libraries. Libraries
+without a `build` target (non-buildable libraries) are Angular projects if other
+targets use Angular executors (for example, `@nx/angular:unit-test`) or their
+code imports `@angular/core`.
 
 Angular projects are split into features, which contain artefacts like
-components and services. Features might also contain routing configuration. That
-applies both to Angular applications and Angular libraries. Here is the
-directory layout of a feature:
+components and services. Features might also contain routing configuration.
+Applications and libraries use the same feature layout, and the `toolkit-nx`
+generators work for both. Here is the directory layout of a feature:
 
 ```text
 <sourceRoot>/
@@ -200,7 +204,16 @@ at the top level of the folder, not in `components/` or `pages/`:
   layout and navigation components (header, menu, footer), top-level pages
   (home, not found), and app-wide services, guards and interceptors. Put domain
   functionality (orders, users, settings, ...) in its own feature.
-- Libraries have no `app` feature.
+
+### Features in libraries
+
+Libraries have no `app` feature and no `app.routes.ts`. Their features sit
+directly under `<sourceRoot>`, next to the library's entry point (usually
+`<sourceRoot>/index.ts`, the file the `tsconfig.base.json` path alias points
+to). Other projects can use only what the entry point exports, so check it when
+you look for an artefact, and export new artefacts from it when other projects
+need them. Applications use library features through the alias, never through
+relative paths into `libs/`.
 
 In addition to components, dialogs, directives, pages, pipes, and services,
 there can also be other types of artefacts like guards and interceptors, they
