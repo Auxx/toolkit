@@ -127,4 +127,52 @@ describe('Page Generator', () => {
     expect(tree.exists(`apps/${appName}/src/${featureName}/pages/${componentName}`)).toBe(false);
     expect(routes).not.toContain('UserListPage');
   });
+
+  describe('in the app feature', () => {
+    const appRoutes = `apps/${appName}/src/app/app.routes.ts`;
+
+    const noSpaces = (code: string | null) => code?.replace(/\s+/g, '');
+
+    beforeEach(() => {
+      tree.write(`apps/${appName}/src/app/app.ts`, 'export class App {}\n');
+    });
+
+    it('should register a route in app routes', async () => {
+      tree.write(appRoutes, `import { Route } from '@angular/router';\n\nexport const appRoutes: Route[] = [];\n`);
+
+      await pageGenerator(tree, { name: 'home', project: appName, feature: 'app' });
+
+      const routes = tree.read(appRoutes, 'utf-8');
+
+      expect(tree.exists(`apps/${appName}/src/app/pages/home/home.page.ts`)).toBe(true);
+      expect(tree.read(`apps/${appName}/src/app/app.ts`, 'utf-8')).toBe('export class App {}\n');
+      expect(routes).toContain(`import { HomePage } from "./pages/home/home.page";`);
+      expect(noSpaces(routes)).toContain(`appRoutes:Route[]=[{path:'home',component:HomePage}];`);
+    });
+
+    it('should register a route before the wildcard route', async () => {
+      tree.write(
+        appRoutes,
+        `import { Route } from '@angular/router';\n\n`
+          + `export const appRoutes: Route[] = [{ path: 'orders', loadChildren: () => import('../orders/orders.routes') }, `
+          + `{ path: '**', redirectTo: '' }];\n`
+      );
+
+      await pageGenerator(tree, { name: 'not-found', project: appName, feature: 'app' });
+
+      expect(noSpaces(tree.read(appRoutes, 'utf-8')))
+        .toContain(`{path:'not-found',component:NotFoundPage},{path:'**',redirectTo:''}]`);
+    });
+
+    it('should fail if app routes have no routes array', async () => {
+      const code = 'export const appRoutes = getRoutes();\n';
+      tree.write(appRoutes, code);
+
+      await expect(() => pageGenerator(tree, { name: 'home', project: appName, feature: 'app' }))
+        .rejects
+        .toThrow(`No routes array of type Route[] or Routes found in "${appRoutes}". Page "home" was not created.`);
+
+      expect(tree.read(appRoutes, 'utf-8')).toBe(code);
+    });
+  });
 });

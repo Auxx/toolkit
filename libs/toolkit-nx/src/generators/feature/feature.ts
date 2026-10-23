@@ -1,6 +1,5 @@
 import { generateFiles, joinPathFragments, logger, Tree } from '@nx/devkit';
-import { Expression, Node, SyntaxKind } from 'ts-morph';
-import { insertArrayElement, morph, variableOfType } from '../../lib/code-morph/code-morph';
+import { insertArrayElement, morph } from '../../lib/code-morph/code-morph';
 import {
   appRoutesPath,
   featurePath,
@@ -8,12 +7,11 @@ import {
   relativeImportPath,
   toKebabCase
 } from '../../lib/path-helper/path-helper';
+import { isWildcardRoute, routesNotFoundMessage, routesVariable } from '../../lib/routes/routes';
 import {
   assertFeatureDoesNotExist
 } from '../../lib/validators/assert-feature-does-not-exist/assert-feature-does-not-exist';
 import { FeatureGeneratorSchema } from './feature-schema';
-
-const routesTypes = [ 'Route[]', 'Routes' ];
 
 export async function featureGenerator(tree: Tree, options: FeatureGeneratorSchema) {
   assertFeatureDoesNotExist(tree, options.project, options.name);
@@ -46,31 +44,16 @@ function wireFeatureRoutes(tree: Tree, options: FeatureGeneratorSchema) {
   const result = morph(
     tree,
     appRoutes,
-    variableOfType(routesTypes, SyntaxKind.ArrayLiteralExpression),
+    routesVariable(),
     insertArrayElement(route, isWildcardRoute)
   );
 
   if (!result.state().withResult) {
-    logger.warn(
-      `No routes array of type ${routesTypes.join(' or ')} found in "${appRoutes}". `
-        + `Add the routes of feature "${options.name}" manually.`
-    );
+    logger.warn(`${routesNotFoundMessage(appRoutes)} Add the routes of feature "${options.name}" manually.`);
     return;
   }
 
   result.save();
-}
-
-function isWildcardRoute(route: Expression): boolean {
-  const path = Node.isObjectLiteralExpression(route)
-    ? route.getProperty('path')
-    : undefined;
-
-  const value = Node.isPropertyAssignment(path)
-    ? path.getInitializer()
-    : undefined;
-
-  return Node.isStringLiteral(value) && value.getLiteralValue() === '**';
 }
 
 export default featureGenerator;

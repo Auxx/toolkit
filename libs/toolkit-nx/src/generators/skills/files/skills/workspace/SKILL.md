@@ -21,7 +21,8 @@ process for changing code is described in the `development-workflow` skill.
 2. `npx nx show project <project>` to get `root`, `sourceRoot` and the target
    executors (this also tells you whether the project is Angular).
 3. List `<sourceRoot>` to see which features exist. Reuse an existing feature
-   before creating a new one.
+   before creating a new one. In applications, `app` is also a feature, for
+   app-wide artefacts only (see "The `app` feature" below).
 4. Read one or two existing artefacts of the same type in that feature (and
    `<feature>.routes.ts`, and `app.routes.ts` for how features are wired in).
    Match their conventions.
@@ -169,8 +170,37 @@ directory layout of a feature:
 
 Files marked `.stories.ts` exist only in projects that use Storybook.
 
-Folder `<sourceRoot>/app` is a feature called `app`. This is a non-standard
-approach to Angular projects.
+### The `app` feature
+
+In Angular applications, folder `<sourceRoot>/app` is a feature called `app`. It
+also holds the application shell created by Angular and Nx. The shell files stay
+at the top level of the folder, not in `components/` or `pages/`:
+
+```text
+<sourceRoot>/
+├── app/
+│   ├── components/ dialogs/ pages/ ...   # app-wide artefacts, standard layout
+│   ├── app.ts                            # root component (App)
+│   ├── app.html
+│   ├── app.scss
+│   ├── app.spec.ts
+│   ├── app.config.ts                     # application providers
+│   └── app.routes.ts                     # application routes (appRoutes)
+├── <feature-name>/
+└── main.ts
+```
+
+- Do NOT move, rename or restructure the shell files, and do not create a
+  feature called `app` - it already exists.
+- `app.routes.ts` plays the role of `<feature-name>.routes.ts` for the `app`
+  feature. The feature generator wires every new feature into it as a
+  lazy-loaded route, and pages generated with `--feature=app` are registered in
+  it.
+- Use the `app` feature only for app-wide artefacts that no other feature owns:
+  layout and navigation components (header, menu, footer), top-level pages
+  (home, not found), and app-wide services, guards and interceptors. Put domain
+  functionality (orders, users, settings, ...) in its own feature.
+- Libraries have no `app` feature.
 
 In addition to components, dialogs, directives, pages, pipes, and services,
 there can also be other types of artefacts like guards and interceptors, they

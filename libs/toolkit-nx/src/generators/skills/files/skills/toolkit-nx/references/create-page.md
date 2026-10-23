@@ -2,7 +2,12 @@
 
 Create a new Angular page. Angular page is a type of Angular component designed
 to display a single view or page in an application. This generator automatically
-registers a new route for the page - there is no need to add it manually.
+registers a new route for the page in `<feature-name>.routes.ts` (or in
+`app.routes.ts` for the `app` feature) - there is no need to add it manually.
+The route is inserted before the wildcard route (`path: '**'`), if there is one.
+If the routes file has no array of type `Route[]` or `Routes`, the generator
+fails with `No routes array of type Route[] or Routes found in "<path>".` and
+creates nothing; add or restore the routes array, then run it again.
 
 ## Key Principles
 
