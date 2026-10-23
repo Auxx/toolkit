@@ -3,12 +3,13 @@ name: toolkit-nx
 description: |
   Required workflow for adding ANY new Angular artefact (feature, page, component,
   dialog, service, pipe, directive) to an Angular application or library in
-  this Nx workspace,
-  using the @hexmode/toolkit-nx generators. Use whenever you are about to create a
-  new .ts/.html/.scss Angular file, whether the user asked for it directly
-  ("add a component", "create a service") or it is a step in a larger task
-  ("build a settings screen", "add an orders feature"). Use instead of
-  `nx g @nx/angular:*`, and `ng generate`, or hand-writing the files.
+  this Nx workspace, using the @hexmode/toolkit-nx generators. Use whenever you
+  are about to create a new .ts/.html/.scss Angular file, whether the user asked
+  for it directly ("add a component", "create a service") or it is a step in a
+  larger task ("build a settings screen", "add an orders feature"). Use instead
+  of `nx g @nx/angular:*`, `ng generate`, or hand-writing these files. Also
+  covers how to write artefacts that have no generator (guards, resolvers,
+  interceptors, models).
 ---
 
 `@hexmode/toolkit-nx` contains a set of code generators, which help scaffold new
@@ -16,7 +17,7 @@ components, features, pages, dialogs, pipes, directives, and services. They
 ensure consistency across the codebase and reduce boilerplate work. These code
 generators SHOULD be used every time a new Angular artefact needs to be created.
 
-Do NOT use `nx g @nx/angular:*`, `ng generate`.
+Do NOT use `nx g @nx/angular:*` or `ng generate`.
 
 # Using @hexmode/toolkit-nx generators
 
@@ -62,6 +63,32 @@ how the result is used, not in how it is generated:
 Generators place files according to the feature layout described in the "Angular
 project structure" section of the `workspace` skill. Use it to check the
 `--dry-run` output before running a generator for real.
+
+## Artefacts without a generator
+
+The generators cover features, pages, components, dialogs, services, pipes and
+directives only. For anything else, write the code manually. Examples: guards,
+resolvers, interceptors, validators, models and interfaces, constants, utility
+functions, and edits to existing files such as `<feature>.routes.ts` or
+`app.config.ts`.
+
+When writing an artefact manually:
+
+- Do NOT disguise it as a generated artefact (for example, a guard generated as
+  a service and then rewritten), and do NOT fall back to `nx g @nx/angular:*` or
+  `ng generate`.
+- Find an existing artefact of the same type in the workspace and match its
+  location, naming and style (for example, functional `CanActivateFn` guards
+  versus class-based ones).
+- If there is none, follow the feature layout from the `workspace` skill: put it
+  in the feature that owns it, in a plural type folder, with kebab-case names
+  and the type as suffix, for example `<feature>/guards/<name>/<name>.guard.ts`.
+  Shared models that do not belong to one artefact go in
+  `<feature>/models/<name>.model.ts`.
+- Add a `.spec.ts` next to it, as the generators do.
+- Wire it in yourself (routes, providers, imports) - nothing does it for you.
+- In your report, say which files you wrote manually and why no generator was
+  used.
 
 ## After generating
 

@@ -30,6 +30,10 @@ service, pipe, directive), create it with the `toolkit-nx` skill. Do NOT
 hand-write the boilerplate, and do NOT use `nx g @nx/angular:*` or
 `ng generate`.
 
+If there is no generator for the artefact (for example, a guard, resolver,
+interceptor, model or utility function), write the code manually, following the
+rules in the `toolkit-nx` skill ("Artefacts without a generator").
+
 ## 4. Implement
 
 Modify generated or existing code to deliver the requested functionality:

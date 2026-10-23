@@ -216,6 +216,8 @@ need them. Applications use library features through the alias, never through
 relative paths into `libs/`.
 
 In addition to components, dialogs, directives, pages, pipes, and services,
-there can also be other types of artefacts like guards and interceptors, they
-should follow a similar folder structure. Any type of artefact can be absent in
-a specific feature.
+there can also be other types of artefacts, like guards and interceptors. They
+have no generator and follow the same folder structure, for example
+`<feature-name>/guards/<guard-name>/<guard-name>.guard.ts` (see "Artefacts
+without a generator" in the `toolkit-nx` skill). Any type of artefact can be
+absent in a specific feature.
