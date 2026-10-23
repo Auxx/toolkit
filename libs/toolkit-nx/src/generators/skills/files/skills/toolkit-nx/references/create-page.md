@@ -9,6 +9,10 @@ registers a new route for the page - there is no need to add it manually.
 - **Always use `--no-interactive`** - Prevents prompts that would hang execution
 - Angular page generator is invoked using `nx g @hexmode/toolkit-nx:page`
   followed by required arguments.
+- If a new page should contain any string messages which need to be translated,
+  use the `--translations=true` argument, which adds boilerplate for the
+  Transloco translation library. See [translations.md](translations.md) for the
+  requirements.
 - All pages should be part of features inside the project, and a feature must
   exist before running the generator. If the required feature does not exist,
   run the feature generator first.

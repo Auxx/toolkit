@@ -32,6 +32,12 @@ Do NOT use `nx g @nx/angular:*`, `ng generate`.
 - To create a new service, read
   [create-service.md](references/create-service.md)
 
+## Translations
+
+Components, dialogs and pages can include Transloco boilerplate with
+`--translations=true`. It requires `@jsverse/transloco` to be installed and
+configured; read [translations.md](references/translations.md) before using it.
+
 ## Layout of generated code
 
 Generators place files according to the feature layout described in the "Angular

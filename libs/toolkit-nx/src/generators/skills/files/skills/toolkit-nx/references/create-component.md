@@ -10,8 +10,9 @@ Create a new Angular component.
 - To create a regular component, use the `--type=component` argument.
 - To create a dialog component, use the `--type=dialog` argument.
 - If a new component should contain any string messages which need to be
-  translated, use the `--translations=true` argument, that will add boilerplate
-  for a Transloco translation library.
+  translated, use the `--translations=true` argument, which adds boilerplate for
+  the Transloco translation library. See [translations.md](translations.md) for
+  the requirements.
 - All components should be part of features inside the project, and a feature
   must exist before running the generator. If the required feature does not
   exist, run the feature generator first.

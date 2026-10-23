@@ -1,4 +1,4 @@
-import { addProjectConfiguration, Tree } from '@nx/devkit';
+import { addProjectConfiguration, Tree, updateJson } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import componentGenerator from './component';
 
@@ -47,6 +47,7 @@ describe('Component Generator', () => {
 
   it('should generate a component with translations support', async () => {
     tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+    updateJson(tree, 'package.json', json => ({ ...json, dependencies: { '@jsverse/transloco': '8.4.0' } }));
 
     await componentGenerator(tree, {
       name: componentName,
@@ -65,6 +66,10 @@ describe('Component Generator', () => {
     const ts = tree.read(`${targetPath}/${componentName}.component.ts`, 'utf-8')?.toString();
     expect(ts).toContain('import { TranslocoDirective } from \'@jsverse/transloco\';');
     expect(ts).toContain('imports: [ TranslocoDirective ]');
+
+    const spec = tree.read(`${targetPath}/${componentName}.component.spec.ts`, 'utf-8')?.toString();
+    expect(spec).toContain('import { TranslocoTestingModule } from \'@jsverse/transloco\';');
+    expect(spec).toContain('TranslocoTestingModule.forRoot(');
   });
 
   it('should generate a component without translations support', async () => {
@@ -85,6 +90,28 @@ describe('Component Generator', () => {
 
     const ts = tree.read(`${targetPath}/${componentName}.component.ts`, 'utf-8')?.toString();
     expect(ts).not.toContain('TranslocoDirective');
+
+    const spec = tree.read(`${targetPath}/${componentName}.component.spec.ts`, 'utf-8')?.toString();
+    expect(spec).not.toContain('TranslocoTestingModule');
+    expect(spec).toContain('imports: [ UserListComponent ]');
+  });
+
+  it('should fail if translations are requested and Transloco is not installed', async () => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+
+    await expect(() =>
+      componentGenerator(tree, {
+        name: componentName,
+        project: appName,
+        feature: featureName,
+        type: 'component',
+        translations: true
+      })
+    )
+      .rejects
+      .toThrow('Dependency "@jsverse/transloco" is not installed.');
+
+    expect(tree.exists(`apps/${appName}/src/${featureName}/components/${componentName}`)).toBe(false);
   });
 
   it('should fail if feature does not exist', async () => {

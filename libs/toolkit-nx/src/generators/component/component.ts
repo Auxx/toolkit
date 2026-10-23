@@ -1,6 +1,9 @@
 import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit';
 import { createSelector, getComponentClassSuffix, getComponentSuffix } from '../../lib/component-types/component-types';
 import { componentPath } from '../../lib/path-helper/path-helper';
+import {
+  assertDependencyInstalled
+} from '../../lib/validators/assert-dependency-installed/assert-dependency-installed';
 import { assertFeatureExists } from '../../lib/validators/assert-feature-exists/assert-feature-exists';
 import { ComponentGeneratorSchema } from './component-schema';
 
@@ -11,6 +14,8 @@ interface LastRun {
   selector: string;
 }
 
+const translationsDependency = '@jsverse/transloco';
+
 const lastRun: LastRun = {
   success: true,
   className: '',
@@ -20,6 +25,10 @@ const lastRun: LastRun = {
 
 export async function componentGenerator(tree: Tree, options: ComponentGeneratorSchema) {
   assertFeatureExists(tree, options.project, options.feature);
+
+  if (options.translations === true) {
+    assertDependencyInstalled(tree, translationsDependency, 'translations support');
+  }
 
   const targetPath = componentPath(tree, options.project, options.feature, options.name, options.type);
   const artifact = names(options.name);

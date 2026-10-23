@@ -1,4 +1,4 @@
-import { addProjectConfiguration, Tree } from '@nx/devkit';
+import { addProjectConfiguration, Tree, updateJson } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import featureGenerator from '../feature/feature';
 import pageGenerator from './page';
@@ -58,5 +58,38 @@ describe('Page Generator', () => {
     expect(routes).toContain('./pages/order-list/order-list.page');
     expect(routes).toContain(`path: 'order-list'`);
     expect(routes).not.toContain('orderList');
+  });
+
+  it('should generate a page with translations support', async () => {
+    updateJson(tree, 'package.json', json => ({ ...json, dependencies: { '@jsverse/transloco': '8.4.0' } }));
+
+    await pageGenerator(tree, {
+      name: componentName,
+      project: appName,
+      feature: featureName,
+      translations: true
+    });
+
+    const ts = tree.read(`apps/${appName}/src/${featureName}/pages/${componentName}/${componentName}.page.ts`, 'utf-8');
+
+    expect(ts).toContain('TranslocoDirective');
+  });
+
+  it('should fail and not register a route if translations are requested and Transloco is not installed', async () => {
+    await expect(() =>
+      pageGenerator(tree, {
+        name: componentName,
+        project: appName,
+        feature: featureName,
+        translations: true
+      })
+    )
+      .rejects
+      .toThrow('Dependency "@jsverse/transloco" is not installed.');
+
+    const routes = tree.read(`apps/${appName}/src/${featureName}/${featureName}.routes.ts`, 'utf-8');
+
+    expect(tree.exists(`apps/${appName}/src/${featureName}/pages/${componentName}`)).toBe(false);
+    expect(routes).not.toContain('UserListPage');
   });
 });
