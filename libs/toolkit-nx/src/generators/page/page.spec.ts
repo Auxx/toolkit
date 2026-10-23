@@ -44,4 +44,19 @@ describe('Page Generator', () => {
     expect(tree.exists(`${targetPath}/${componentName}.page.stories.ts`)).toBe(true);
     expect(tree.exists(`${targetPath}/${componentName}.page.ts`)).toBe(true);
   });
+
+  it('should register a route with kebab-case paths', async () => {
+    await pageGenerator(tree, {
+      name: 'orderList',
+      project: appName,
+      feature: featureName
+    });
+
+    const routes = tree.read(`apps/${appName}/src/${featureName}/${featureName}.routes.ts`, 'utf-8');
+
+    expect(tree.exists(`apps/${appName}/src/${featureName}/pages/order-list/order-list.page.ts`)).toBe(true);
+    expect(routes).toContain('./pages/order-list/order-list.page');
+    expect(routes).toContain(`path: 'order-list'`);
+    expect(routes).not.toContain('orderList');
+  });
 });

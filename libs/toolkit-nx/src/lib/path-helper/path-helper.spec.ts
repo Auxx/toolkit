@@ -3,10 +3,12 @@ import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/cr
 import {
   componentContainerPath,
   componentPath,
+  featureComponentPath,
   featurePath,
   featureRoutesPath,
   projectPath,
-  projectSrcPath
+  projectSrcPath,
+  toKebabCase
 } from './path-helper';
 
 describe('Path Helper', () => {
@@ -37,6 +39,19 @@ describe('Path Helper', () => {
         sourceRoot: `libs/${libName}/src`
       }
     );
+  });
+
+  describe('toKebabCase', () => {
+    it.each`
+    name               | expected
+    ${'user-info'}     | ${'user-info'}
+    ${'userInfo'}      | ${'user-info'}
+    ${'UserInfo'}      | ${'user-info'}
+    ${'user_info'}     | ${'user-info'}
+    ${'user info'}     | ${'user-info'}
+    `('should convert $name to kebab-case', ({ name, expected }) => {
+      expect(toKebabCase(name)).toBe(expected);
+    });
   });
 
   describe('projectPath', () => {
@@ -73,6 +88,24 @@ describe('Path Helper', () => {
         expect(featurePath(tree, projectName, featureName)).toBe(expectedPath);
       }
     );
+
+    it('should normalise feature name', () => {
+      expect(featurePath(tree, appName, 'userProfile')).toBe(`apps/${appName}/src/user-profile`);
+    });
+  });
+
+  describe('featureComponentPath', () => {
+    it.each`
+    componentName     | type           | expectedPath
+    ${'user-info'}    | ${'component'} | ${'components/user-info'}
+    ${'orderList'}    | ${'page'}      | ${'pages/order-list'}
+    ${'ConfirmExit'}  | ${'dialog'}    | ${'dialogs/confirm-exit'}
+    `(
+      'should return path to component $componentName of type $type relative to feature',
+      ({ componentName, type, expectedPath }) => {
+        expect(featureComponentPath(componentName, type)).toBe(expectedPath);
+      }
+    );
   });
 
   describe('componentContainerPath', () => {
@@ -107,6 +140,11 @@ describe('Path Helper', () => {
   describe('featureRoutesPath', () => {
     it('should return path to a feature routes file', () => {
       expect(featureRoutesPath(tree, appName, 'welcome')).toBe(`apps/${appName}/src/welcome/welcome.routes.ts`);
+    });
+
+    it('should normalise feature name', () => {
+      expect(featureRoutesPath(tree, appName, 'userProfile'))
+        .toBe(`apps/${appName}/src/user-profile/user-profile.routes.ts`);
     });
   });
 });

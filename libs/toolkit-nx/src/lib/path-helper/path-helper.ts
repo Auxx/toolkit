@@ -1,6 +1,10 @@
 import { joinPathFragments, names, readProjectConfiguration, Tree } from '@nx/devkit';
 import { ComponentType, getComponentFolder } from '../component-types/component-types';
 
+export function toKebabCase(name: string): string {
+  return names(name).fileName;
+}
+
 export function projectPath(tree: Tree, projectName: string): string {
   return readProjectConfiguration(tree, projectName).root;
 }
@@ -16,7 +20,7 @@ export function projectSrcPath(tree: Tree, projectName: string): string {
 }
 
 export function featurePath(tree: Tree, projectName: string, featureName: string): string {
-  return joinPathFragments(projectSrcPath(tree, projectName), names(featureName).fileName);
+  return joinPathFragments(projectSrcPath(tree, projectName), toKebabCase(featureName));
 }
 
 export function componentContainerPath(
@@ -31,6 +35,10 @@ export function componentContainerPath(
   );
 }
 
+export function featureComponentPath(componentName: string, type: ComponentType = 'component'): string {
+  return joinPathFragments(getComponentFolder(type), toKebabCase(componentName));
+}
+
 export function componentPath(
   tree: Tree,
   projectName: string,
@@ -39,11 +47,11 @@ export function componentPath(
   type: ComponentType = 'component'
 ): string {
   return joinPathFragments(
-    componentContainerPath(tree, projectName, featureName, type),
-    names(componentName).fileName
+    featurePath(tree, projectName, featureName),
+    featureComponentPath(componentName, type)
   );
 }
 
 export function featureRoutesPath(tree: Tree, projectName: string, featureName: string): string {
-  return joinPathFragments(featurePath(tree, projectName, featureName), `${names(featureName).fileName}.routes.ts`);
+  return joinPathFragments(featurePath(tree, projectName, featureName), `${toKebabCase(featureName)}.routes.ts`);
 }

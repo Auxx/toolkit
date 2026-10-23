@@ -1,5 +1,5 @@
-import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit';
-import { featurePath } from '../../lib/path-helper/path-helper';
+import { generateFiles, joinPathFragments, Tree } from '@nx/devkit';
+import { featurePath, toKebabCase } from '../../lib/path-helper/path-helper';
 import {
   assertFeatureDoesNotExist
 } from '../../lib/validators/assert-feature-does-not-exist/assert-feature-does-not-exist';
@@ -9,7 +9,7 @@ export async function featureGenerator(tree: Tree, options: FeatureGeneratorSche
   assertFeatureDoesNotExist(tree, options.project, options.name);
 
   const targetPath = featurePath(tree, options.project, options.name);
-  const { fileName } = names(options.name);
+  const fileName = toKebabCase(options.name);
 
   generateFiles(
     tree,
