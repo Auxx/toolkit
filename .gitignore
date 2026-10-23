@@ -50,9 +50,9 @@ vitest.config.*.timestamp*
 __screenshots__/
 
 .agents/skills
-.agents/AGENTS.md
+/AGENTS.md
 .claude/skills
-.claude/CLAUDE.md
+/CLAUDE.md
 
 
 storybook-static

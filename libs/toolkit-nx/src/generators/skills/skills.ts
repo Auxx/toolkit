@@ -1,35 +1,29 @@
 import { generateFiles, joinPathFragments, Tree } from '@nx/devkit';
+import { readFileSync } from 'node:fs';
+import { htmlCommentMarkers, upsertTextBlock } from '../../lib/text-block/text-block';
 import { SkillsGeneratorSchema } from './skills-schema';
 
 const knownSkills = [ 'toolkit-nx', 'workspace', 'development-workflow' ];
 
+const skillsTargets = [ '/.agents/skills', '/.claude/skills' ];
+
+const instructionsTargets = [ '/AGENTS.md', '/CLAUDE.md' ];
+
+const instructionsMarkers = htmlCommentMarkers('@hexmode/toolkit-nx');
+
 export async function skillsGenerator(tree: Tree, _options: SkillsGeneratorSchema) {
   const source = joinPathFragments(__dirname, 'files');
-  const agents = '/.agents';
-  const claude = '/.claude';
-  const agentsSkills = joinPathFragments(agents, 'skills');
-  const claudeSkills = joinPathFragments(claude, 'skills');
+  const instructions = readFileSync(joinPathFragments(source, 'instructions.md'), 'utf-8');
 
-  knownSkills.forEach(skill => {
-    tree.delete(joinPathFragments(agentsSkills, skill));
-    tree.delete(joinPathFragments(claudeSkills, skill));
+  skillsTargets.forEach(target => {
+    knownSkills.forEach(skill => tree.delete(joinPathFragments(target, skill)));
+    generateFiles(tree, joinPathFragments(source, 'skills'), target, {});
   });
 
-  generateFiles(
-    tree,
-    source,
-    agents,
-    {}
-  );
-
-  generateFiles(
-    tree,
-    source,
-    claude,
-    {}
-  );
-
-  tree.rename(joinPathFragments(claude, 'AGENTS.md'), joinPathFragments(claude, 'CLAUDE.md'));
+  instructionsTargets.forEach(target => {
+    const content = tree.read(target, 'utf-8') ?? '';
+    tree.write(target, upsertTextBlock(content, instructions, instructionsMarkers));
+  });
 }
 
 export default skillsGenerator;
