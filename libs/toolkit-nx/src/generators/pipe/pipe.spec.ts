@@ -40,4 +40,16 @@ describe('Pipe Generator', () => {
     expect(tree.exists(`${targetPath}/${pipeName}.pipe.spec.ts`)).toBe(true);
     expect(tree.exists(`${targetPath}/${pipeName}.pipe.ts`)).toBe(true);
   });
+
+  it('should not overwrite an existing pipe', async () => {
+    tree.write(`apps/${appName}/src/${featureName}/routes.ts`, '');
+    const existing = `apps/${appName}/src/${featureName}/pipes/${pipeName}/${pipeName}.pipe.ts`;
+    tree.write(existing, '// edited by user');
+
+    await expect(() => pipeGenerator(tree, { name: pipeName, project: appName, feature: featureName }))
+      .rejects
+      .toThrow(`Pipe "${pipeName}" already exists in feature "${featureName}"`);
+
+    expect(tree.read(existing, 'utf-8')).toBe('// edited by user');
+  });
 });

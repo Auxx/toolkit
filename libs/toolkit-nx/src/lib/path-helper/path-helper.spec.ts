@@ -1,12 +1,16 @@
 import { addProjectConfiguration, Tree } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
 import {
+  appRoutesPath,
   componentContainerPath,
   componentPath,
+  featureComponentPath,
   featurePath,
   featureRoutesPath,
   projectPath,
-  projectSrcPath
+  projectSrcPath,
+  relativeImportPath,
+  toKebabCase
 } from './path-helper';
 
 describe('Path Helper', () => {
@@ -37,6 +41,19 @@ describe('Path Helper', () => {
         sourceRoot: `libs/${libName}/src`
       }
     );
+  });
+
+  describe('toKebabCase', () => {
+    it.each`
+    name               | expected
+    ${'user-info'}     | ${'user-info'}
+    ${'userInfo'}      | ${'user-info'}
+    ${'UserInfo'}      | ${'user-info'}
+    ${'user_info'}     | ${'user-info'}
+    ${'user info'}     | ${'user-info'}
+    `('should convert $name to kebab-case', ({ name, expected }) => {
+      expect(toKebabCase(name)).toBe(expected);
+    });
   });
 
   describe('projectPath', () => {
@@ -73,6 +90,24 @@ describe('Path Helper', () => {
         expect(featurePath(tree, projectName, featureName)).toBe(expectedPath);
       }
     );
+
+    it('should normalise feature name', () => {
+      expect(featurePath(tree, appName, 'userProfile')).toBe(`apps/${appName}/src/user-profile`);
+    });
+  });
+
+  describe('featureComponentPath', () => {
+    it.each`
+    componentName     | type           | expectedPath
+    ${'user-info'}    | ${'component'} | ${'components/user-info'}
+    ${'orderList'}    | ${'page'}      | ${'pages/order-list'}
+    ${'ConfirmExit'}  | ${'dialog'}    | ${'dialogs/confirm-exit'}
+    `(
+      'should return path to component $componentName of type $type relative to feature',
+      ({ componentName, type, expectedPath }) => {
+        expect(featureComponentPath(componentName, type)).toBe(expectedPath);
+      }
+    );
   });
 
   describe('componentContainerPath', () => {
@@ -97,11 +132,38 @@ describe('Path Helper', () => {
         expect(componentPath(tree, projectName, featureName, componentName, type)).toBe(expectedPath);
       }
     );
+
+    it('should normalise path names', () => {
+      expect(componentPath(tree, appName, 'featureName', 'componentName', 'component'))
+        .toBe('apps/my-app/src/feature-name/components/component-name');
+    });
   });
 
   describe('featureRoutesPath', () => {
     it('should return path to a feature routes file', () => {
       expect(featureRoutesPath(tree, appName, 'welcome')).toBe(`apps/${appName}/src/welcome/welcome.routes.ts`);
+    });
+
+    it('should normalise feature name', () => {
+      expect(featureRoutesPath(tree, appName, 'userProfile'))
+        .toBe(`apps/${appName}/src/user-profile/user-profile.routes.ts`);
+    });
+  });
+
+  describe('appRoutesPath', () => {
+    it('should return path to the app routes file', () => {
+      expect(appRoutesPath(tree, appName)).toBe(`apps/${appName}/src/app/app.routes.ts`);
+    });
+  });
+
+  describe('relativeImportPath', () => {
+    it.each`
+    fromFile                     | toFile                                  | expected
+    ${'src/app/app.routes.ts'}   | ${'src/orders/orders.routes.ts'}        | ${'../orders/orders.routes'}
+    ${'src/orders/orders.routes.ts'} | ${'src/orders/pages/list/list.page.ts'} | ${'./pages/list/list.page'}
+    ${'src/app/app.routes.ts'}   | ${'src/app/app.config.ts'}              | ${'./app.config'}
+    `('should return import path from $fromFile to $toFile', ({ fromFile, toFile, expected }) => {
+      expect(relativeImportPath(fromFile, toFile)).toBe(expected);
     });
   });
 });

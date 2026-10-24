@@ -24,6 +24,16 @@
       "description": "The feature in which to create the page.",
       "x-priority": "important",
       "x-prompt": "Which feature the page should be generated in?"
+    },
+    "translations": {
+      "type": "boolean",
+      "description": "Add translation support",
+      "default": false
+    },
+    "storybook": {
+      "type": "boolean",
+      "description": "Generate Storybook stories",
+      "default": false
     }
   },
   "required": ["name", "project", "feature"]

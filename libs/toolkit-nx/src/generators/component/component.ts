@@ -1,6 +1,13 @@
 import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit';
 import { createSelector, getComponentClassSuffix, getComponentSuffix } from '../../lib/component-types/component-types';
-import { componentPath, featurePath } from '../../lib/path-helper/path-helper';
+import { componentPath } from '../../lib/path-helper/path-helper';
+import {
+  assertArtefactDoesNotExist
+} from '../../lib/validators/assert-artefact-does-not-exist/assert-artefact-does-not-exist';
+import {
+  assertDependencyInstalled
+} from '../../lib/validators/assert-dependency-installed/assert-dependency-installed';
+import { assertFeatureExists } from '../../lib/validators/assert-feature-exists/assert-feature-exists';
 import { ComponentGeneratorSchema } from './component-schema';
 
 interface LastRun {
@@ -10,6 +17,10 @@ interface LastRun {
   selector: string;
 }
 
+const translationsDependency = '@jsverse/transloco';
+
+const storybookDependencies = [ 'storybook', '@storybook/angular' ];
+
 const lastRun: LastRun = {
   success: true,
   className: '',
@@ -18,11 +29,15 @@ const lastRun: LastRun = {
 };
 
 export async function componentGenerator(tree: Tree, options: ComponentGeneratorSchema) {
-  const feature = featurePath(tree, options.project, options.feature);
-  if (!tree.exists(feature) || tree.isFile(feature)) {
-    console.log(`Feature "${options.feature}" does not exist.`);
-    lastRun.success = false;
-    return;
+  assertFeatureExists(tree, options.project, options.feature);
+  assertArtefactDoesNotExist(tree, options.project, options.feature, options.name, options.type);
+
+  if (options.translations === true) {
+    assertDependencyInstalled(tree, translationsDependency, 'translations support');
+  }
+
+  if (options.storybook === true) {
+    storybookDependencies.forEach(dependency => assertDependencyInstalled(tree, dependency, 'Storybook stories'));
   }
 
   const targetPath = componentPath(tree, options.project, options.feature, options.name, options.type);
@@ -33,19 +48,20 @@ export async function componentGenerator(tree: Tree, options: ComponentGenerator
   const fileName = `${artifact.fileName}.${getComponentSuffix(options.type)}`;
   const selector = createSelector(tree, options.project, options.name);
 
-  generateFiles(
-    tree,
-    joinPathFragments(__dirname, 'files'),
-    targetPath,
-    {
-      entityName,
-      className,
-      fileName,
-      selector,
-      translations: options.translations,
-      projectName: names(options.project).propertyName
-    }
-  );
+  const substitutions = {
+    entityName,
+    className,
+    fileName,
+    selector,
+    translations: options.translations,
+    projectName: names(options.project).propertyName
+  };
+
+  generateFiles(tree, joinPathFragments(__dirname, 'files', 'component'), targetPath, substitutions);
+
+  if (options.storybook === true) {
+    generateFiles(tree, joinPathFragments(__dirname, 'files', 'storybook'), targetPath, substitutions);
+  }
 
   lastRun.success = true;
   lastRun.className = className;
