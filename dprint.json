@@ -63,6 +63,7 @@
     "**/coverage",
     "**/test.ts",
     "**/*-lock.json",
+    "**/CHANGELOG.md",
     "**/*.d.ts",
     "**/.idea",
     "**/.nx",
