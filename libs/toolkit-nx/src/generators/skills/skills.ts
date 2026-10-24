@@ -16,7 +16,7 @@ export async function skillsGenerator(tree: Tree, _options: SkillsGeneratorSchem
   const instructions = readFileSync(joinPathFragments(source, 'instructions.md'), 'utf-8');
 
   skillsTargets.forEach(target => {
-    knownSkills.forEach(skill => tree.delete(joinPathFragments(target, skill)));
+    knownSkills.forEach(skill => deleteRecursively(tree, joinPathFragments(target, skill)));
     generateFiles(tree, joinPathFragments(source, 'skills'), target, {});
   });
 
@@ -24,6 +24,12 @@ export async function skillsGenerator(tree: Tree, _options: SkillsGeneratorSchem
     const content = tree.read(target, 'utf-8') ?? '';
     tree.write(target, upsertTextBlock(content, instructions, instructionsMarkers));
   });
+}
+
+// Tree.delete() on a directory does not delete files that exist only on disk once something is written into it again.
+function deleteRecursively(tree: Tree, path: string) {
+  tree.children(path).forEach(child => deleteRecursively(tree, joinPathFragments(path, child)));
+  tree.delete(path);
 }
 
 export default skillsGenerator;

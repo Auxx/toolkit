@@ -21,18 +21,53 @@ Do NOT use `nx g @nx/angular:*` or `ng generate`.
 
 # Using @hexmode/toolkit-nx generators
 
-## Run the correct generator
+## Commands
 
-- To create a new component or dialog, read
-  [create-component.md](references/create-component.md)
-- To create a new feature, read
-  [create-feature.md](references/create-feature.md)
-- To create a new page, read [create-page.md](references/create-page.md)
-- To create a new pipe, read [create-pipe.md](references/create-pipe.md)
-- To create a new directive, read
-  [create-directive.md](references/create-directive.md)
-- To create a new service, read
-  [create-service.md](references/create-service.md)
+| Artefact  | Command                                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| feature   | `npx nx g @hexmode/toolkit-nx:feature --project=<project> --name=<feature>`                                  |
+| page      | `npx nx g @hexmode/toolkit-nx:page --project=<project> --feature=<feature> --name=<name>`                    |
+| component | `npx nx g @hexmode/toolkit-nx:component --project=<project> --feature=<feature> --name=<name>`               |
+| dialog    | `npx nx g @hexmode/toolkit-nx:component --project=<project> --feature=<feature> --name=<name> --type=dialog` |
+| service   | `npx nx g @hexmode/toolkit-nx:service --project=<project> --feature=<feature> --name=<name>`                 |
+| pipe      | `npx nx g @hexmode/toolkit-nx:pipe --project=<project> --feature=<feature> --name=<name>`                    |
+| directive | `npx nx g @hexmode/toolkit-nx:directive --project=<project> --feature=<feature> --name=<name>`               |
+
+Optional arguments for pages, components and dialogs: `--translations=true` (see
+[Translations](#translations)) and `--storybook=true` (see
+[Storybook](#storybook)).
+
+## Arguments
+
+- `--project`: the exact project name from `npx nx show projects --json`. Pass
+  it unchanged, do NOT convert it to kebab-case: names such as `myApp` or
+  `@org/shop` are valid.
+- `--feature` and `--name`: kebab-case, for example `user-profile`. The
+  generators convert names to kebab-case for folders and files anyway, but
+  kebab-case input keeps the names in your report and in the output identical.
+- The feature must exist before you create a page, component, dialog, service,
+  pipe or directive in it. If it does not, create it with the feature generator
+  first and read [create-feature.md](references/create-feature.md) - it explains
+  how the feature is wired into the routes.
+- Resolve the project and feature from the request and the workspace (see the
+  `workspace` skill). Ask the user only if they cannot be determined.
+
+## Steps
+
+1. Run the command with `--no-interactive --dry-run` appended.
+   `--no-interactive` prevents prompts that would hang execution.
+2. Check the output as described in [Dry run](#dry-run).
+3. Run the same command again with `--no-interactive` only.
+
+## Pages
+
+Use the page generator for pages, never `component --type=page`: it creates the
+page files but does not register a route.
+
+The page generator registers a route for the page in `<feature>.routes.ts` (or
+in `app.routes.ts` for the `app` feature), before the wildcard route
+(`path: '**'`) if there is one - there is no need to add it manually. The page
+is reachable at `/<feature>/<name>`.
 
 ## Translations
 
@@ -101,7 +136,7 @@ up. Fix the cause and run the dry run again.
 
 | Message                                                                                  | Meaning and what to do                                                                                                                                                                                                                                                                                                                                    |
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Cannot find configuration for '<project>'`                                              | No project with this name. Get the exact name from `npx nx show projects` and pass it unchanged as `--project`.                                                                                                                                                                                                                                           |
+| `Cannot find configuration for '<project>'`                                              | No project with this name. Get the exact name from `npx nx show projects --json` and pass it unchanged as `--project`.                                                                                                                                                                                                                                    |
 | `No source folder for "<project>"`                                                       | The project has no `sourceRoot` in its configuration, so the generators cannot place files. Tell the user; do not edit the project configuration on your own.                                                                                                                                                                                             |
 | `Feature "<feature>" does not exist.`                                                    | Run the feature generator first. Check the spelling too: names are converted to kebab-case, so `--feature=userProfile` means folder `user-profile`.                                                                                                                                                                                                       |
 | `<Type> "<name>" already exists in feature "<feature>" (<path>).`                        | An artefact of this type and name is already in the feature (`<Type>` is `Component`, `Page`, `Dialog`, `Service`, `Pipe` or `Directive`). Generators never overwrite existing artefacts. Edit the existing one, or pick another name if you really need a second artefact. Names are compared in kebab-case, so `userList` and `user-list` are the same. |

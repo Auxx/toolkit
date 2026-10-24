@@ -16,10 +16,10 @@ process for changing code is described in the `development-workflow` skill.
 
 ## Exploration workflow
 
-1. `npx nx show projects` to find candidate projects. Ignore the root project
-   which matches the package name specified in `package.json`.
-2. `npx nx show project <project>` to get `root`, `sourceRoot` and the target
-   executors (this also tells you whether the project is Angular).
+1. `npx nx show projects --json` to find candidate projects. Ignore the root
+   project which matches the package name specified in `package.json`.
+2. `npx nx show project <project> --json` to get `root`, `sourceRoot` and the
+   target executors (this also tells you whether the project is Angular).
 3. List `<sourceRoot>` to see which features exist. Reuse an existing feature
    before creating a new one. In applications, `app` is also a feature, for
    app-wide artefacts only (see "The `app` feature" below).
@@ -32,8 +32,8 @@ process for changing code is described in the `development-workflow` skill.
 
 ## List all projects
 
-Use `npx nx show projects` command to list all projects in the workspace. It
-returns all projects, both application and library, as a list in JSON format.
+Use `npx nx show projects --json` command to list all projects in the workspace.
+It returns all projects, both application and library, as a list in JSON format.
 
 Example output:
 
@@ -54,30 +54,31 @@ which accepts `app` for applications and `lib` for libraries. For example, to
 list only application projects, use the following command:
 
 ```shell
-npx nx show projects --type app
+npx nx show projects --type app --json
 ```
 
 It is also possible to list only projects that were affected by the code changes
 using the `--affected` option. For example:
 
 ```shell
-npx nx show projects --affected
+npx nx show projects --affected --json
 ```
 
 ## Workspace dependency graph
 
-`npx nx graph --print` prints the project graph as JSON. The part that matters
-is `graph.dependencies`: a map from each project name to the projects it depends
-on (`[{ "source": "a", "target": "b", "type": "static" }]`). Ignore
-`graph.nodes`, which repeats every project's full configuration.
+`npx nx graph --print` prints the project graph as JSON (`nx graph` has no
+`--json` option; `--print` is its JSON output and never opens a browser). The
+part that matters is `graph.dependencies`: a map from each project name to the
+projects it depends on (`[{ "source": "a", "target": "b", "type": "static" }]`).
+Ignore `graph.nodes`, which repeats every project's full configuration.
 
 ## Get project details
 
 To get details about a specific project, use the
-`npx nx show project <project-name> --web=false` command. Replace
-`<project-name>` with the name of the project you want to explore. This command
-will display information about the project, including its location inside the
-workspace, dependencies, targets, and more.
+`npx nx show project <project-name> --json` command. Replace `<project-name>`
+with the name of the project you want to explore. This command will display
+information about the project, including its location inside the workspace,
+dependencies, targets, and more.
 
 Example output:
 

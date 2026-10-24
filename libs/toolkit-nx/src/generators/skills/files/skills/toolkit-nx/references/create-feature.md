@@ -1,10 +1,10 @@
 # create-feature
 
-Create a new feature inside an Angular application or library project. This
-generator creates an empty `<feature>.routes.ts` file. In applications, it also
-wires the feature into the application routes automatically - there is no need
-to add the route manually. In libraries, see
-[Features in libraries](#features-in-libraries).
+Read this after running the feature generator (command and dry-run output are in
+[SKILL.md](../SKILL.md#commands)). The generator creates an empty
+`<feature>.routes.ts` file. In applications, it also wires the feature into the
+application routes automatically - there is no need to add the route manually.
+In libraries, see [Features in libraries](#features-in-libraries).
 
 ## Routing in applications
 
@@ -62,41 +62,3 @@ library knows about it until you expose it:
    packages "missing from peerDependencies", add exactly those packages to
    `peerDependencies`, with a range based on the version in the workspace
    `package.json` (for example `^22.2.3` for `22.2.3`).
-
-## Key Principles
-
-- **Always use `--no-interactive`** - Prevents prompts that would hang execution
-- Feature generator is invoked using `npx nx g @hexmode/toolkit-nx:feature`
-  followed by required arguments.
-- All Angular artefacts should be part of features inside the project. Run this
-  generator first if the required feature does not exist yet.
-
-## Steps
-
-### 1. Generator arguments
-
-- Project name: must be a non-empty string (convert to a kebab-case and pass to
-  generator as `--project` argument)
-- Feature name: must be a non-empty string (convert to a kebab-case and pass to
-  generator as `--name` argument)
-
-### 2. Dry-Run to Verify File Placement
-
-**Always run with `--dry-run` first** to verify files will be created in the
-correct location:
-
-```shell
-npx nx g @hexmode/toolkit-nx:feature --project=<project-name> --name=<feature-name> --no-interactive --dry-run
-```
-
-Check the output as described in [Dry run](../SKILL.md#dry-run). Expect
-`CREATE <sourceRoot>/<feature>/<feature>.routes.ts` and, in applications,
-`UPDATE <sourceRoot>/app/app.routes.ts`.
-
-### 3. Run the Generator
-
-Execute the generator:
-
-```shell
-npx nx g @hexmode/toolkit-nx:feature --project=<project-name> --name=<feature-name> --no-interactive
-```

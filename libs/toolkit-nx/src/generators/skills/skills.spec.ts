@@ -1,5 +1,9 @@
 import { addProjectConfiguration, Tree } from '@nx/devkit';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { createTreeWithEmptyWorkspace } from 'nx/src/generators/testing-utils/create-tree-with-empty-workspace';
+import { FsTree } from 'nx/src/generators/tree';
 import skillsGenerator from './skills';
 
 describe('Skills Generator', () => {
@@ -33,15 +37,35 @@ describe('Skills Generator', () => {
 
     expect(tree.children(agentsTarget).length).toBe(3);
     expect(tree.exists(`${agentsTarget}/toolkit-nx/SKILL.md`)).toBe(true);
-    expect(tree.children(`${agentsTarget}/toolkit-nx/references`).length).toBe(8);
+    expect(tree.children(`${agentsTarget}/toolkit-nx/references`).length).toBe(3);
     expect(tree.exists(`${agentsTarget}/workspace/SKILL.md`)).toBe(true);
     expect(tree.exists(`${agentsTarget}/development-workflow/SKILL.md`)).toBe(true);
 
     expect(tree.children(claudeTarget).length).toBe(3);
     expect(tree.exists(`${claudeTarget}/toolkit-nx/SKILL.md`)).toBe(true);
-    expect(tree.children(`${claudeTarget}/toolkit-nx/references`).length).toBe(8);
+    expect(tree.children(`${claudeTarget}/toolkit-nx/references`).length).toBe(3);
     expect(tree.exists(`${claudeTarget}/workspace/SKILL.md`)).toBe(true);
     expect(tree.exists(`${claudeTarget}/development-workflow/SKILL.md`)).toBe(true);
+  });
+
+  it('should remove files that no longer exist in the source from the installed skills', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'skills-'));
+
+    try {
+      const staleDir = join(root, '.claude/skills/toolkit-nx/references');
+      mkdirSync(staleDir, { recursive: true });
+      writeFileSync(join(staleDir, 'obsolete.md'), 'Outdated reference');
+      writeFileSync(join(root, '.claude/skills/custom.md'), 'Not a toolkit skill');
+
+      const fsTree = new FsTree(root, false);
+      await skillsGenerator(fsTree, { unused: undefined });
+
+      expect(fsTree.exists('.claude/skills/toolkit-nx/references/obsolete.md')).toBe(false);
+      expect(fsTree.exists('.claude/skills/toolkit-nx/SKILL.md')).toBe(true);
+      expect(fsTree.exists('.claude/skills/custom.md')).toBe(true);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   describe.each`
