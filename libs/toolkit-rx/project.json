@@ -15,6 +15,10 @@
   },
   "tags": [],
   "targets": {
+    "sync-version": {
+      "executor": "@hexmode/toolkit-nx:sync-version",
+      "options": {}
+    },
     "build": {
       "executor": "@nx/angular:package",
       "outputs": [

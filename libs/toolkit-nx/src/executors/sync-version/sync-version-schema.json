@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "SyncVersion executor",
+  "description": "Syncs library versions to main project version",
+  "type": "object",
+  "properties": {},
+  "required": []
+}

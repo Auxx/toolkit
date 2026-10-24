@@ -9,6 +9,11 @@
       "implementation": "./src/executors/import-icons/import-icons",
       "schema": "./src/executors/import-icons/import-icons.schema.json",
       "description": "Import Fluent icons from SVG files"
+    },
+    "sync-version": {
+      "implementation": "./src/executors/sync-version/sync-version",
+      "schema": "./src/executors/sync-version/sync-version-schema.json",
+      "description": "Syncs library versions to main project version"
     }
   }
 }
