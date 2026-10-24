@@ -21,7 +21,7 @@ const context: ExecutorContext = {
 
 // The executor modifies physical files in the system, we don't want to run that test for now.
 // We should find a way to mock direct FS access.
-xdescribe('SyncVersion Executor', () => {
+describe.skip('SyncVersion Executor', () => {
   it('can run', async () => {
     const output = await executor(options, context);
     expect(output.success).toBe(true);
